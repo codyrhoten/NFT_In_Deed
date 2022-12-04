@@ -1,0 +1,35 @@
+{
+  "name": "fundraiser-dapp",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "@openzeppelin/contracts": "^4.8.0",
+    "command-exists": "^1.2.9",
+    "commander": "^8.3.0",
+    "follow-redirects": "^1.15.2",
+    "js-sha3": "^0.8.0",
+    "memorystream": "^0.3.1",
+    "os-tmpdir": "^1.0.2",
+    "semver": "^5.7.1",
+    "tmp": "^0.0.33"
+  },
+  "devDependencies": {
+    "hardhat": "^2.12.3",
+    "solc": "^0.8.17"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/codyrhoten/Fundraiser-DApp.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/codyrhoten/Fundraiser-DApp/issues"
+  },
+  "homepage": "https://github.com/codyrhoten/Fundraiser-DApp#readme"
+}

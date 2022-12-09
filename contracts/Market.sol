@@ -6,6 +6,7 @@ import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 
 contract Market is ReentrancyGuard {
+    // CHANGE HOW DATA IS ADDED TO IPFS AND THIS CONTRACT
     using Counters for Counters.Counter;
     Counters.Counter private listedHouses;
     address payable private _marketOwner;
@@ -16,7 +17,20 @@ contract Market is ReentrancyGuard {
         address payable seller;
         address payable owner;
         uint256 price;
+        details _details;
         bool listed;
+    }
+
+    struct details {
+        uint256 lotSqFt;
+        uint256 houseSqFt;
+        uint256 bedrooms;
+        uint256 bathrooms;
+        string houseType;
+        uint256 yearBuilt;
+        string[] location;
+        string image;
+        string condition;
     }
 
     mapping(uint256 => house) private idToHouse;

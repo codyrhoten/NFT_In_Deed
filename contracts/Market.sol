@@ -17,11 +17,10 @@ contract Market is ReentrancyGuard {
         address payable seller;
         address payable owner;
         uint256 price;
-        details _details;
         bool listed;
     }
 
-    struct details {
+    /* struct details {
         uint256 lotSqFt;
         uint256 houseSqFt;
         uint256 bedrooms;
@@ -29,9 +28,9 @@ contract Market is ReentrancyGuard {
         string houseType;
         uint256 yearBuilt;
         string[] location;
-        string image;
+        string imageURL;
         string condition;
-    }
+    } */
 
     mapping(uint256 => house) private idToHouse;
 

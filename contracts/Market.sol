@@ -6,7 +6,6 @@ import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 
 contract Market is ReentrancyGuard {
-    // CHANGE HOW DATA IS ADDED TO IPFS AND THIS CONTRACT
     using Counters for Counters.Counter;
     Counters.Counter private listedHouses;
     address payable private _marketOwner;
@@ -50,6 +49,14 @@ contract Market is ReentrancyGuard {
         uint256 price
     );
 
+    modifier onlyMarketOwner() {
+        require(
+            msg.sender == _marketOwner, 
+            'Only the market owner can perform this action'
+        );
+        _;
+    }
+
     constructor() {
         _marketOwner = payable(msg.sender);
     }
@@ -58,12 +65,24 @@ contract Market is ReentrancyGuard {
         return (_price * 300) / 10_000;
     }
 
+    function getMarketOwner() external view onlyMarketOwner returns (address) {
+        return _marketOwner;
+    }
+
+    function getMarketOwnerBalance() external view onlyMarketOwner returns (uint256) {
+        return _marketOwner.balance;
+    }
+
     // List the house on the market
     function listHouse(
         address _houseContract,
         uint256 _houseId,
         uint256 _price
-    ) public payable nonReentrant {
+    ) 
+        public 
+        payable 
+        nonReentrant 
+    {
         require(_price > 0, "Price must be at least 1 wei");
         require(
             msg.value == getListingFee(_price),

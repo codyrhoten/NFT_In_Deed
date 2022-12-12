@@ -8,7 +8,7 @@ import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 contract Market is ReentrancyGuard {
     using Counters for Counters.Counter;
     Counters.Counter private listedHouses;
-    address payable private _marketOwner;
+    address payable private marketOwner;
 
     struct house {
         uint256 houseId;
@@ -51,26 +51,26 @@ contract Market is ReentrancyGuard {
 
     modifier onlyMarketOwner() {
         require(
-            msg.sender == _marketOwner, 
+            msg.sender == marketOwner, 
             'Only the market owner can perform this action'
         );
         _;
     }
 
     constructor() {
-        _marketOwner = payable(msg.sender);
+        marketOwner = payable(msg.sender);
     }
 
-    function getListingFee(uint256 _price) private pure returns (uint256) {
+    function getListingFee(uint256 _price) public pure returns (uint256) {
         return (_price * 300) / 10_000;
     }
 
     function getMarketOwner() external view onlyMarketOwner returns (address) {
-        return _marketOwner;
+        return marketOwner;
     }
 
     function getMarketOwnerBalance() external view onlyMarketOwner returns (uint256) {
-        return _marketOwner.balance;
+        return marketOwner.balance;
     }
 
     // List the house on the market
@@ -134,7 +134,7 @@ contract Market is ReentrancyGuard {
         );
         _house.owner = payable(msg.sender);
         _house.listed = false;
-        _marketOwner.transfer(getListingFee(_house.price));
+        marketOwner.transfer(getListingFee(_house.price));
         listedHouses.decrement();
 
         emit houseSold(

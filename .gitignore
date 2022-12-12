@@ -40,3 +40,4 @@ coverage.json
 
 #Hardhat files
 cache
+artifacts

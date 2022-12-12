@@ -1,15 +1,17 @@
-const { loadFixture } = require('@nomicfoundation/harhat-network-helpers');
+const { ethers } = require("hardhat");
+const { loadFixture } = require('@nomicfoundation/hardhat-network-helpers');
 const { expect } = require('chai');
 
-describe('Contracts', () => {
+describe('House NFT Contract', () => {
     async function deployContractsFixture() {
-        const HouseNFT = await ethers.getContractFactory('HouseNFT');
-        let houseNFT = await HouseNFT.deploy();
-        await houseNFT.deployed();
-
         const Market = await ethers.getContractFactory('Market');
         let market = await Market.deploy();
         await market.deployed();
+        const marketAddress = market.address;
+
+        const HouseNFT = await ethers.getContractFactory('HouseNFT');
+        let houseNFT = await HouseNFT.deploy(marketAddress);
+        await houseNFT.deployed();
 
         const [owner, addr1, addr2] = await ethers.getSigners();
 
@@ -17,7 +19,7 @@ describe('Contracts', () => {
             houseNFT,
             houseNFTAddress: houseNFT.address,
             market,
-            marketAddress: market.address,
+            marketAddress,
             owner,
             addr1,
             addr2,
@@ -30,7 +32,7 @@ describe('Contracts', () => {
                 houseNFT,
                 marketAddress,
             } = await loadFixture(deployContractsFixture);
-            expect(await houseNFT._marketContract()).to.equal(marketAddress);
+            expect(await houseNFT.marketContract()).to.equal(marketAddress);
         });
     });
 });

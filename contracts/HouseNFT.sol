@@ -8,7 +8,7 @@ import '@openzeppelin/contracts/utils/Counters.sol';
 contract HouseNFT is ERC721URIStorage {
     using Counters for Counters.Counter;
     Counters.Counter private _houseIds;
-    address marketContract;
+    address public marketContract;
     event HouseMinted(uint256);
 
     constructor(address _marketContract) ERC721('NFT In Deed', 'NID') {

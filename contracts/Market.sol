@@ -61,9 +61,19 @@ contract Market is ReentrancyGuard {
         marketOwner = payable(msg.sender);
     }
 
-    function getListingFee(uint256 _price) public pure returns (uint256) {
-        return (_price * 300) / 10_000;
+    function getListingFee(uint256 _houseId) public view returns (uint256) {
+        house memory _house = idToHouse[_houseId];
+        uint256 fee = (_house.price * 300) / 10_000;
+        return fee;
     }
+
+    // function etherToWei(uint256 _ether) private pure returns (uint256) {
+    //     return _ether * 10e18;
+    // }
+
+    // function weiToEther(uint256 _wei) private pure returns (uint256) {
+    //     return _wei / 10e18;
+    // }
 
     function getMarketOwner() external view onlyMarketOwner returns (address) {
         return marketOwner;
@@ -122,8 +132,8 @@ contract Market is ReentrancyGuard {
     {
         house storage _house = idToHouse[_houseId];
         require(
-            msg.value >= _house.price,
-            "Not enough ether to afford asking price"
+            msg.value >= _house.price + getListingFee(_house.houseId),
+            "Not enough ether to afford asking price and listing fee"
         );
 
         payable(_house.seller).transfer(msg.value);
@@ -134,7 +144,7 @@ contract Market is ReentrancyGuard {
         );
         _house.owner = payable(msg.sender);
         _house.listed = false;
-        marketOwner.transfer(getListingFee(_house.price));
+        marketOwner.transfer(getListingFee(_house.houseId));
         listedHouses.decrement();
 
         emit houseSold(

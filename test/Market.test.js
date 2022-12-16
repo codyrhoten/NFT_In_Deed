@@ -70,12 +70,49 @@ describe('Market Contract', () => {
                 market,
                 owner
             } = await loadFixture(deployContractsFixture);
+            const marketOwnerBal = await market.getMarketOwnerBalance();
+            expect(marketOwnerBal).to.not.equal('0');
+        });
+
+        it('Should return owner address if msg.sender is owner', async () => {
+            const {
+                market,
+                owner
+            } = await loadFixture(deployContractsFixture);
             const marketOwner = await market.getMarketOwner();
             expect(marketOwner).to.equal(owner.address)
         });
     });
 
     describe('Listing houses on the market', () => {
+        it(
+            'Should revert if asking price isn\'t greater than 1 wei',
+            async () => {
+                const {
+                    houseNFT,
+                    market,
+                    addr1,
+                    houseNFTAddress
+                } = await loadFixture(deployContractsFixture);
+
+                // mint a house with a dummy URI
+                await houseNFT
+                    .connect(addr1)
+                    .mint('https://whereikeepmynfts.com');
+
+                // list that house with a price lower than 1 wei
+                const price = '0';
+
+                await expect(market
+                    .connect(addr1)
+                    .listHouse(
+                        houseNFTAddress,
+                        '1',
+                        price
+                    )).to.be.revertedWith('Price must be at least 1 wei');
+            }
+        );
+
         it(
             'Should get the listing fee at 3% of the price',
             async function () {

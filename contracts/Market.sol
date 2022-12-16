@@ -61,9 +61,8 @@ contract Market is ReentrancyGuard {
         marketOwner = payable(msg.sender);
     }
 
-    function getListingFee(uint256 _houseId) public view returns (uint256) {
-        house memory _house = idToHouse[_houseId];
-        uint256 fee = (_house.price * 300) / 10_000;
+    function getListingFee(uint256 _price) public pure returns (uint256) {
+        uint256 fee = (_price * 300) / 10_000;
         return fee;
     }
 
@@ -134,10 +133,10 @@ contract Market is ReentrancyGuard {
         uint256 fee = getListingFee(_house.price);
         require(
             msg.value >= _house.price + fee,
-            'Not enough ether to afford asking price and listing fee'
+            "Not enough ether to afford asking price and listing fee"
         );
-
-        payable(_house.seller).transfer(msg.value - fee);
+        uint256 payment = msg.value - fee;
+        payable(_house.seller).transfer(payment);
         IERC721(_houseContract).transferFrom(
             address(this),
             msg.sender,
@@ -153,7 +152,7 @@ contract Market is ReentrancyGuard {
             _houseContract,
             _house.seller,
             msg.sender,
-            msg.value - fee
+            payment
         );
     }
 

@@ -2,16 +2,6 @@ const { ethers } = require("hardhat");
 const { loadFixture } = require('@nomicfoundation/hardhat-network-helpers');
 const { expect } = require('chai');
 
-async function mintHouse(address, contract) {
-    const house = await contract
-        .connect(address)
-        .mint('https://whereikeepmynfts.org');
-    const txn = await house.wait();
-    const event = txn.events[2]
-    const value = event.args[0];
-    return (tokenId = value.toNumber());
-}
-
 describe('Market Contract', () => {
     async function deployContractsFixture() {
         const Market = await ethers.getContractFactory('Market');
@@ -42,21 +32,90 @@ describe('Market Contract', () => {
             const { market, owner } = await loadFixture(deployContractsFixture);
             expect(await market.getMarketOwner()).to.equal(owner.address);
         });
+    });
 
-        /* it(
+    describe('Owner-only functions', () => {
+        it(
+            'Should revert if msg.sender tries to access owner balance but isn\'t owner',
+            async () => {
+                const {
+                    market,
+                    addr1
+                } = await loadFixture(deployContractsFixture);
+                await expect(market.connect(addr1)
+                    .getMarketOwnerBalance()).to.be
+                    .revertedWith(
+                        'Only the market owner can perform this action'
+                    );
+            }
+        );
+
+        it(
+            'Should revert if msg.sender tries to access owner address but isn\'t owner',
+            async () => {
+                const {
+                    market,
+                    addr1
+                } = await loadFixture(deployContractsFixture);
+                await expect(market.connect(addr1)
+                    .getMarketOwner()).to.be
+                    .revertedWith(
+                        'Only the market owner can perform this action'
+                    );
+            }
+        );
+
+        it('Should return owner balance if msg.sender is owner', async () => {
+            const {
+                market,
+                owner
+            } = await loadFixture(deployContractsFixture);
+            const marketOwner = await market.getMarketOwner();
+            expect(marketOwner).to.equal(owner.address)
+        });
+    });
+
+    describe('Listing houses on the market', () => {
+        it(
             'Should get the listing fee at 3% of the price',
             async function () {
-                const { addr1, market, houseNFT } = await loadFixture(deployContractsFixture);
-                const tokenId = await mintHouse(addr1, houseNFT);
-                const price = '115';
-                let contractListingFee = await market.getListingFee(tokenId);
-                contractListingFee = ethers.utils.formatUnits(
-                    contractListingFee.toString(), 
-                    'ether'
+                const {
+                    addr1,
+                    market,
+                    houseNFT,
+                    houseNFTAddress
+                } = await loadFixture(deployContractsFixture);
+
+                // mint a house with a dummy URI
+                await houseNFT
+                    .connect(addr1)
+                    .mint('https://whereikeepmynfts.com');
+
+                // list that house with price in wei
+                const price = '50000000000000000000';
+                const listingFee = (Number(price) * 0.03);
+                await market.connect(addr1).listHouse(
+                    houseNFTAddress,
+                    '1',
+                    price,
+                    { value: listingFee.toString() }
                 );
-                const listingFee = (price * 0.03);
-                expect(contractListingFee.toString()).to.equal(listingFee.toString());
+
+                // get the listing fee that's based on that house's market 
+                // price
+                let contractListingFee = await market.getListingFee(price);
+                expect(contractListingFee.toString())
+                    .to
+                    .equal(listingFee.toString());
             }
-        ); */
+        );
+    });
+
+    describe('Selling houses on the market', () => {
+
+    });
+
+    describe('Returning houses to the market', () => {
+
     });
 });

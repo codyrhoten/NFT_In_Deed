@@ -146,6 +146,47 @@ describe('Market Contract', () => {
                     .equal(listingFee.toString());
             }
         );
+
+        it(
+            'Should increase house ID by 1 after listing a house for sale',
+            async () => {
+                const {
+                    houseNFT,
+                    addr1,
+                    market,
+                    houseNFTAddress
+                } = await loadFixture(deployContractsFixture);
+                let houseIds = [];
+
+                for (i = 0; i < 2; i++) {
+                    // mint a house with a dummy URI
+                    let mintedHouse = await houseNFT
+                        .connect(addr1)
+                        .mint('https://whereikeepmynfts.com');
+                    let tx = await mintedHouse.wait();
+                    let mintEvent = tx.events[0];
+                    let mintedHouseId = Number(mintEvent.args[2]);
+                    // list the house
+                    const price = '50000000000000000000';
+                    const listingFee = (Number(price) * 0.03);
+                    const house = await market.connect(addr1).listHouse(
+                        houseNFTAddress,
+                        mintedHouseId,
+                        price,
+                        { value: listingFee.toString() }
+                    );
+                    // get item id from event
+                    let listing = await house.wait();
+                    let events = listing.events;
+                    let event = events[events.length - 1];
+                    let value = event.args.houseId;
+                    let houseId = value.toNumber();
+                    houseIds.push(houseId);
+                }
+
+                expect(houseIds[1]).to.equal(houseIds[0] + 1);
+            }
+        );
     });
 
     describe('Selling houses on the market', () => {

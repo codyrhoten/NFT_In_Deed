@@ -33,7 +33,7 @@ contract Market is ReentrancyGuard {
 
     mapping(uint256 => house) private idToHouse;
 
-    event houseListed(
+    event HouseListed(
         uint256 houseId,
         address houseContract,
         address seller,
@@ -41,7 +41,7 @@ contract Market is ReentrancyGuard {
         uint256 price
     );
 
-    event houseSold(
+    event HouseSold(
         uint256 houseId,
         address houseContract,
         address seller,
@@ -114,7 +114,7 @@ contract Market is ReentrancyGuard {
             true
         );
 
-        emit houseListed(
+        emit HouseListed(
             _houseId,
             _houseContract,
             msg.sender,
@@ -146,7 +146,7 @@ contract Market is ReentrancyGuard {
         payable(marketOwner).transfer(listingFee);
         listedHouses.decrement();
 
-        emit houseSold(
+        emit HouseSold(
             _houseId,
             _houseContract,
             _house.seller,

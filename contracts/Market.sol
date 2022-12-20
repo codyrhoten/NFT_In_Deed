@@ -132,8 +132,8 @@ contract Market is ReentrancyGuard {
         house storage _house = idToHouse[_houseId];
         uint256 listingFee = getListingFee(_house.price);
         require(
-            msg.value >= _house.price,
-            "Not enough ether to afford asking price"
+            msg.value == _house.price,
+            "Please submit the correct price"
         );
         payable(_house.seller).transfer(msg.value);
         IERC721(_houseContract).transferFrom(

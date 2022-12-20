@@ -20,7 +20,7 @@ const listHouse = async (nftContract, sender, marketContract, price) => {
         { value: listingFee }
     );
 
-    return { house, mintedHouseId };
+    return { house, mintedHouseId, listingFee };
 };
 
 describe('Market Contract', () => {
@@ -35,7 +35,7 @@ describe('Market Contract', () => {
 
         const [owner, addr1, addr2, addr3] = await ethers.getSigners();
 
-        const price = '50000000000000000000'; // wei, or 50 ETH
+        const price = ethers.utils.parseUnits('50', 'ether'); // 50 ETH
 
         return {
             houseNFT,
@@ -111,14 +111,19 @@ describe('Market Contract', () => {
     });
 
     describe('Listing houses on the market', () => {
+        let houseNFT, addr1, market, price;
+
+        before('Load deploy contracts fixture', async () => {
+            const deployment = await loadFixture(deployContractsFixture);
+            houseNFT = deployment.houseNFT;
+            addr1 = deployment.addr1;
+            market = deployment.market;
+            price = deployment.price;
+        });
+
         it(
             'Should revert if asking price isn\'t greater than 1 wei',
             async () => {
-                const {
-                    houseNFT,
-                    market,
-                    addr1
-                } = await loadFixture(deployContractsFixture);
                 const price = '0';
 
                 // mint a house
@@ -146,11 +151,6 @@ describe('Market Contract', () => {
         it(
             'Should get the listing fee at 3% of the price',
             async function () {
-                const {
-                    market,
-                    price
-                } = await loadFixture(deployContractsFixture);
-
                 const testListingFee = (Number(price) * 0.03);
                 const contractListingFee = await market.getListingFee(price);
 
@@ -162,12 +162,6 @@ describe('Market Contract', () => {
         it(
             'Should increase house ID by 1 after listing a house for sale',
             async () => {
-                const {
-                    houseNFT,
-                    addr1,
-                    market,
-                    price
-                } = await loadFixture(deployContractsFixture);
                 let houseIds = [];
 
                 for (i = 0; i < 2; i++) {
@@ -194,15 +188,8 @@ describe('Market Contract', () => {
         );
 
         it(
-            'Should transfer ownership of the minted house to the market',
+            'Should transfer ownership of the minted house to market',
             async () => {
-                const {
-                    houseNFT,
-                    addr1,
-                    price,
-                    market,
-                } = await loadFixture(deployContractsFixture);
-
                 // mint a house
                 const mintedHouse = await houseNFT
                     .connect(addr1)
@@ -210,6 +197,7 @@ describe('Market Contract', () => {
                 const tx = await mintedHouse.wait();
                 const mintEvent = tx.events[0];
                 const mintedHouseId = mintEvent.args[2];
+
                 const firstHomeowner = await houseNFT.ownerOf(mintedHouseId);
 
                 // list that house to the market
@@ -234,16 +222,77 @@ describe('Market Contract', () => {
             }
         );
 
+        it('Should transfer listing fee from seller to market', async () => {
+            let marketBalBeforeListing = await ethers.provider.getBalance(market.address);
+            marketBalBeforeListing = ethers.utils.formatEther(marketBalBeforeListing);
+    
+            // mint and list a house
+            const { listingFee } =
+                await listHouse(
+                    houseNFT,
+                    addr1,
+                    market,
+                    price
+                );
+    
+            let marketBalAfterListing = await ethers.provider.getBalance(market.address);
+            marketBalAfterListing = ethers.utils.formatEther(marketBalAfterListing);
+            const listingFeeInEther = ethers.utils.formatEther(listingFee);
+            const finalMarketBal = Number(marketBalBeforeListing) + Number(listingFeeInEther);
+    
+            expect(Number(marketBalAfterListing)).to.eq(finalMarketBal);
+        });
+
         it('Should emit a HouseListed event', async () => {
-            const {
-                houseNFT,
-                addr1,
-                market,
-                price,
-            } = await loadFixture(deployContractsFixture);
+            // use dummy URI to mint house
+            const mintedHouse = await houseNFT
+                .connect(addr1)
+                .mint('https://whereikeepmynfts.com');
+            const tx = await mintedHouse.wait();
+            const mintEvent = tx.events[0];
+            const mintedHouseId = mintEvent.args[2];
+
+            // list that house
+            let listingFee = await market.getListingFee(price);
+
+            expect(
+                market
+                    .connect(addr1)
+                    .listHouse(
+                        houseNFT.address,
+                        mintedHouseId,
+                        price,
+                        { value: listingFee }
+                    )
+            )
+                .to.emit(market, 'HouseListed')
+                .withArgs(
+                    mintedHouseId,
+                    houseNFT.address,
+                    addr1.address,
+                    market.address,
+                    price
+                );
+        });
+    });
+
+    describe('Selling houses on the market', () => {
+        let houseNFT, addr1, market, price, addr2;
+
+        before('Load deploy contracts fixture', async () => {
+            const deployment = await loadFixture(deployContractsFixture);
+            houseNFT = deployment.houseNFT;
+            addr1 = deployment.addr1;
+            market = deployment.market;
+            price = deployment.price;
+            addr2 = deployment.addr2;
+        });
+
+        it('Should revert if the wrong price is entered', async () => {
+            const wrongPrice = '40000';
 
             // mint and list a house
-            const { house, mintedHouseId } =
+            const { mintedHouseId } =
                 await listHouse(
                     houseNFT,
                     addr1,
@@ -251,24 +300,136 @@ describe('Market Contract', () => {
                     price
                 );
 
-            // get event emitted from listing house
-            const listing = await house.wait();
-            const events = listing.events;
-            const event = events[events.length - 1];
-            const eventParams = event.args;
-            const { houseId, houseContract, seller, owner } = eventParams;
-
-            expect(event.event).to.eq('HouseListed');
-            expect(houseId.toString()).to.eq(mintedHouseId);
-            expect(houseContract.toString()).to.eq(houseNFT.address);
-            expect(seller.toString()).to.eq(addr1.address);
-            expect(owner.toString()).to.eq(market.address);
-            expect(eventParams.price.toString()).to.eq(price);
+            // attempt to buy a house using a different price than listed
+            await expect(market
+                .connect(addr2)
+                .buyHouse(houseNFT.address, mintedHouseId, { value: wrongPrice })
+            )
+                .to.be.revertedWith('Please submit the correct price');
         });
-    });
 
-    describe('Selling houses on the market', () => {
+        it('Should provide the seller with price from buyer', async () => {
+            // mint and list a house
+            const { mintedHouseId } =
+                await listHouse(
+                    houseNFT,
+                    addr1,
+                    market,
+                    price
+                );
 
+            let addr1BalAfterListing = await ethers.provider.getBalance(addr1.address);
+            addr1BalAfterListing = ethers.utils.formatEther(addr1BalAfterListing);
+
+            // buy that house
+            let sale = await market
+                .connect(addr2)
+                .buyHouse(houseNFT.address, mintedHouseId, { value: price });
+            sale = await sale.wait();
+
+            let addr1BalAfterSale = await ethers.provider.getBalance(addr1.address);
+            addr1BalAfterSale = ethers.utils.formatEther(addr1BalAfterSale);
+            let priceInEther = ethers.utils.formatEther(price);
+            let finalAddr1Bal = Number(addr1BalAfterListing) + Number(priceInEther);
+
+            expect(Number(addr1BalAfterSale)).to.eq(finalAddr1Bal);
+        });
+
+        it('Should transfer ownership of listed house to buyer', async () => {
+            // mint and list a house
+            const { mintedHouseId } =
+                await listHouse(
+                    houseNFT,
+                    addr1,
+                    market,
+                    price
+                );
+
+            const firstHomeowner = await houseNFT.ownerOf(mintedHouseId);
+
+            // buy that house
+            let sale = await market
+                .connect(addr2)
+                .buyHouse(houseNFT.address, mintedHouseId, { value: price });
+            sale = await sale.wait();
+
+            const newOwner = await houseNFT.ownerOf(mintedHouseId);
+
+            expect(newOwner).to.not.eq(firstHomeowner);
+            expect(newOwner).to.eq(addr2.address);
+        });
+
+        it('Should update who homeowner is in market contract', async () => {
+            // mint and list a house
+            const { mintedHouseId } =
+                await listHouse(
+                    houseNFT,
+                    addr1,
+                    market,
+                    price
+                );
+
+            let sale = await market
+                .connect(addr2)
+                .buyHouse(houseNFT.address, mintedHouseId, { value: price });
+            sale = await sale.wait();
+
+            const events = sale.events;
+            const event = events[events.length - 1];
+            const owner = event.args.owner;
+
+            expect(owner).to.eq(addr2.address);
+        });
+
+        it('Should emit HouseSold event', async () => {
+            // mint and list a house
+            const { mintedHouseId } =
+                await listHouse(
+                    houseNFT,
+                    addr1,
+                    market,
+                    price
+                );
+
+            expect(await market
+                .connect(addr2)
+                .buyHouse(houseNFT.address, mintedHouseId, { value: price })
+            )
+                .to.emit(market, 'HouseSold')
+                .withArgs(
+                    mintedHouseId,
+                    houseNFT.address,
+                    addr1.address,
+                    addr2.address,
+                    price
+                );
+        });
+
+        it('Should transfer listing fee to market owner', async () => {   
+            let ownerBalBeforeSale = await market.getMarketOwnerBalance();
+            ownerBalBeforeSale = ethers.utils.formatEther(ownerBalBeforeSale);
+    
+            // mint and list a house
+            const { mintedHouseId, listingFee } =
+                await listHouse(
+                    houseNFT,
+                    addr1,
+                    market,
+                    price
+                );
+    
+            let sale = await market
+                .connect(addr2)
+                .buyHouse(houseNFT.address, mintedHouseId, { value: price });
+            sale = await sale.wait();
+    
+            let ownerBalAfterSale = await market.getMarketOwnerBalance();
+            ownerBalAfterSale = ethers.utils.formatEther(ownerBalAfterSale);
+            const listingFeeInEther = ethers.utils.formatEther(listingFee);
+            const finalOwnerBal = Number(ownerBalBeforeSale) + Number(listingFeeInEther);
+    
+            expect(Number(ownerBalAfterSale)).to.eq(finalOwnerBal);
+        });
     });
 
     describe('Returning houses to the market', () => {

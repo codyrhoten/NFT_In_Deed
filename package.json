@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "typings": "dist/index",
   "dependencies": {
     "@nomicfoundation/hardhat-network-helpers": "^1.0.7",
     "@nomicfoundation/hardhat-toolbox": "^1.0.2",
@@ -11,6 +12,7 @@
     "command-exists": "^1.2.9",
     "commander": "^8.3.0",
     "follow-redirects": "^1.15.2",
+    "ganache-cli": "^6.12.2",
     "js-sha3": "^0.8.0",
     "memorystream": "^0.3.1",
     "os-tmpdir": "^1.0.2",
@@ -19,7 +21,8 @@
   },
   "devDependencies": {
     "hardhat": "^2.12.3",
-    "solc": "^0.8.17"
+    "solc": "^0.8.17",
+    "solidity-coverage": "^0.8.2"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

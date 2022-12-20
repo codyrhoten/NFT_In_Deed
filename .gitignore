@@ -41,3 +41,5 @@ coverage.json
 #Hardhat files
 cache
 artifacts
+
+otherWaysToCode.js

@@ -10,7 +10,7 @@ contract Market is ReentrancyGuard {
     Counters.Counter private listedHouses;
     address payable private marketOwner;
 
-    struct house {
+    struct House {
         uint256 houseId;
         address houseContract;
         address payable seller;
@@ -31,14 +31,15 @@ contract Market is ReentrancyGuard {
         string condition;
     } */
 
-    mapping(uint256 => house) private idToHouse;
+    mapping(uint256 => House) private idToHouse;
 
     event HouseListed(
         uint256 houseId,
         address houseContract,
         address seller,
         address owner,
-        uint256 price
+        uint256 price,
+        bool listed
     );
 
     event HouseSold(
@@ -46,7 +47,8 @@ contract Market is ReentrancyGuard {
         address houseContract,
         address seller,
         address owner,
-        uint256 price
+        uint256 price,
+        bool listed
     );
 
     modifier onlyMarketOwner() {
@@ -105,7 +107,7 @@ contract Market is ReentrancyGuard {
         );
         listedHouses.increment();
 
-        idToHouse[_houseId] = house(
+        idToHouse[_houseId] = House(
             _houseId,
             _houseContract,
             payable(msg.sender),
@@ -119,7 +121,8 @@ contract Market is ReentrancyGuard {
             _houseContract,
             msg.sender,
             address(this),
-            _price
+            _price,
+            true
         );
     }
 
@@ -129,7 +132,7 @@ contract Market is ReentrancyGuard {
         payable
         nonReentrant
     {
-        house storage _house = idToHouse[_houseId];
+        House storage _house = idToHouse[_houseId];
         uint256 listingFee = getListingFee(_house.price);
         require(
             msg.value == _house.price,
@@ -151,24 +154,26 @@ contract Market is ReentrancyGuard {
             _houseContract,
             _house.seller,
             msg.sender,
-            msg.value
+            msg.value,
+            false
         );
     }
 
-    function getListedHouses() public view returns (house[] memory) {
+    function getListedHouses() public view returns (House[] memory) {
         uint256 houseCount = listedHouses.current();
-        house[] memory houses = new house[](houseCount);
+        House[] memory houses = new House[](houseCount);
 
         for (uint256 i = 0; i < houseCount; i++) {
             if (idToHouse[i + 1].listed) {
-                houses[i] = idToHouse[i + 1];
+                House storage currentHouse = idToHouse[i + 1];
+                houses[i] = currentHouse;
             }
         }
 
         return houses;
     }
 
-    function getMyHouses() public view returns (house[] memory) {
+    function getMyHouses() public view returns (House[] memory) {
         uint256 houseCount = listedHouses.current();
         uint256 myHouseCount = 0;
 
@@ -178,18 +183,19 @@ contract Market is ReentrancyGuard {
             }
         }
 
-        house[] memory myHouses = new house[](myHouseCount);
+        House[] memory myHouses = new House[](myHouseCount);
 
         for (uint256 i = 0; i < houseCount; i++) {
             if (idToHouse[i + 1].owner == msg.sender) {
-                myHouses[i] = idToHouse[i + 1];
+                House storage currentHouse = idToHouse[i + 1];
+                myHouses[i] = currentHouse;
             }
         }
 
         return myHouses;
     }
 
-    function getMyListedHouses() public view returns (house[] memory) {
+    function getMyListedHouses() public view returns (House[] memory) {
         uint256 houseCount = listedHouses.current();
         uint256 myListedHouseCount = 0;
 
@@ -199,7 +205,7 @@ contract Market is ReentrancyGuard {
             }
         }
 
-        house[] memory myListedHouses = new house[](myListedHouseCount);
+        House[] memory myListedHouses = new House[](myListedHouseCount);
 
         for (uint256 i = 0; i < houseCount; i++) {
             if (idToHouse[i + 1].seller == msg.sender) {

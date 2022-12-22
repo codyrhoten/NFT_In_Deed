@@ -319,19 +319,10 @@ describe('Market Contract', () => {
     });
 
     describe('Getting house data of the market', () => {
-        let houseNFT, addr1, market, price, addr2;
-
-        before('Load deploy contracts fixture', async () => {
-            const deployment = await loadFixture(deployContractsFixture);
-            houseNFT = deployment.houseNFT;
-            addr1 = deployment.addr1;
-            market = deployment.market;
-            price = deployment.price;
-            addr2 = deployment.addr2;
-        });
-
-        // *** THIS TEST IS CAUSING PROBLEMS FOR THE NEXT ONE ***
         it('Should get data of all houses available for sale on the market', async () => {
+            const { houseNFT, addr1, market, price } = await loadFixture(deployContractsFixture);
+
+            // mint and list 2 houses using first address
             for (i = 0; i < 2; i++) {
                 // mint and list a house
                 let { house } = await listHouse(houseNFT, addr1, market, price);
@@ -341,33 +332,63 @@ describe('Market Contract', () => {
             const houses = await market.getListedHouses();
             expect(houses.length).to.eq(2);
         });
-
+        
         it('Should only get data of houses on the market purchased by msg.sender', async () => {
+            const { 
+                houseNFT, 
+                addr1, 
+                market, 
+                price, 
+                addr2 
+            } = await loadFixture(deployContractsFixture);
             let houseIds = [];
 
+            // mint and list 3 houses using first address            
             for (i = 0; i < 3; i++) {
                 // mint and list a house
                 let { mintedHouseId, house } = await listHouse(houseNFT, addr1, market, price);
                 await house.wait();
                 houseIds.push(mintedHouseId);
             }
-
-            let allHouses = await market.getListedHouses();
-
-            // addr2 buys 1st house from adr1
+            
+            let allHousesBeforeSale = await market.getListedHouses();
+            expect(allHousesBeforeSale.length).to.eq(3);
+            
+            // second address buys 1st house from first address
             let sale = await market
-                .connect(addr2)
-                .buyHouse(houseNFT.address, houseIds[0], { value: price });
+            .connect(addr2)
+            .buyHouse(houseNFT.address, houseIds[0], { value: price });
             sale = await sale.wait();
+            
+            let allHousesAfterSale = await market.getListedHouses();
 
-            const myHouses = await market.connect(addr2).getMyHouses();
-
-            expect(allHouses.length).to.eq(3);
-            expect(myHouses.length).to.eq(1);
+            const addr2Houses = await market.connect(addr2).getMyHouses();
+            expect(allHousesAfterSale.length).to.eq(2);
+            expect(addr2Houses.length).to.eq(1);
         });
 
         it('Should only get data of houses listed by msg.sender', async () => {
+            const { 
+                houseNFT, 
+                addr1, 
+                market, 
+                price, 
+                addr2 
+            } = await loadFixture(deployContractsFixture);
+            let mintedBy;
 
+            // mint and list 2 houses using first address and one using 
+            for (i = 0; i < 3; i++) {
+                mintedBy = i == 0 ? addr2 : addr1;
+                let { house } = await listHouse(houseNFT, mintedBy, market, price);
+                await house.wait();
+            }
+
+            const allHouses = await market.getListedHouses();
+            const addr2ListedHouses = await market.connect(addr2).getMyListedHouses();
+
+            expect(allHouses.length).to.eq(3);
+            expect(addr2ListedHouses.length).to.eq(1)
         });
     });
 });

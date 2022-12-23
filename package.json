@@ -1,41 +1,49 @@
 {
-  "name": "NFT-in-Deed",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "typings": "dist/index",
-  "dependencies": {
-    "@nomicfoundation/hardhat-network-helpers": "^1.0.7",
-    "@nomicfoundation/hardhat-toolbox": "^1.0.2",
-    "@openzeppelin/contracts": "^4.8.0",
-    "chai": "^4.3.7",
-    "command-exists": "^1.2.9",
-    "commander": "^8.3.0",
-    "follow-redirects": "^1.15.2",
-    "ganache-cli": "^6.12.2",
-    "js-sha3": "^0.8.0",
-    "memorystream": "^0.3.1",
-    "os-tmpdir": "^1.0.2",
-    "semver": "^5.7.1",
-    "tmp": "^0.0.33"
-  },
-  "devDependencies": {
-    "hardhat": "^2.12.3",
-    "solc": "^0.8.17",
-    "solidity-coverage": "^0.8.2"
-  },
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/codyrhoten/Fundraiser-DApp.git"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/codyrhoten/Fundraiser-DApp/issues"
-  },
-  "homepage": "https://github.com/codyrhoten/Fundraiser-DApp#readme"
+    "name": "nft-in-deed",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "typings": "dist/index",
+    "dependencies": {
+        "@nomicfoundation/hardhat-network-helpers": "^1.0.7",
+        "@nomicfoundation/hardhat-toolbox": "^1.0.2",
+        "@openzeppelin/contracts": "^4.8.0",
+        "axios": "^1.2.1",
+        "chai": "^4.3.7",
+        "command-exists": "^1.2.9",
+        "commander": "^8.3.0",
+        "follow-redirects": "^1.15.2",
+        "ganache-cli": "^6.12.2",
+        "ipfs-http-client": "^59.0.0",
+        "js-sha3": "^0.8.0",
+        "memorystream": "^0.3.1",
+        "next": "^13.1.0",
+        "os-tmpdir": "^1.0.2",
+        "react": "^18.2.0",
+        "react-dom": "^18.2.0",
+        "semver": "^5.7.1",
+        "tmp": "^0.0.33"
+    },
+    "devDependencies": {
+        "hardhat": "^2.12.3",
+        "solc": "^0.8.17",
+        "solidity-coverage": "^0.7.22"
+    },
+    "scripts": {
+        "dev": "next dev",
+        "build": "next build",
+        "start": "next start",
+        "lint": "next lint"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/codyrhoten/Fundraiser-DApp.git"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/codyrhoten/Fundraiser-DApp/issues"
+    },
+    "homepage": "https://github.com/codyrhoten/Fundraiser-DApp#readme"
 }

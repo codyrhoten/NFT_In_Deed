@@ -33,11 +33,11 @@ describe('Market Contract', () => {
         const houseNFT = await HouseNFT.deploy(market.address);
         await houseNFT.deployed();
 
-        const [owner, addr1, addr2, addr3] = await ethers.getSigners();
+        const [owner, addr1, addr2] = await ethers.getSigners();
 
         const price = ethers.utils.parseUnits('50', 'ether'); // 50 ETH
 
-        return { houseNFT, market, owner, addr1, addr2, addr3, price };
+        return { houseNFT, market, owner, addr1, addr2, price };
     }
 
     describe('Deployment', () => {
@@ -377,7 +377,7 @@ describe('Market Contract', () => {
             } = await loadFixture(deployContractsFixture);
             let mintedBy;
 
-            // mint and list 2 houses using first address and one using 
+            // mint and list 2 houses using first address and one using the second
             for (i = 0; i < 3; i++) {
                 mintedBy = i == 0 ? addr2 : addr1;
                 let { house } = await listHouse(houseNFT, mintedBy, market, price);

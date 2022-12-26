@@ -9,6 +9,7 @@
         "@nomicfoundation/hardhat-toolbox": "^1.0.2",
         "@openzeppelin/contracts": "^4.8.0",
         "axios": "^1.2.1",
+        "bootstrap": "^5.2.3",
         "chai": "^4.3.7",
         "command-exists": "^1.2.9",
         "commander": "^8.3.0",
@@ -20,6 +21,7 @@
         "next": "^13.1.0",
         "os-tmpdir": "^1.0.2",
         "react": "^18.2.0",
+        "react-bootstrap": "^2.7.0",
         "react-dom": "^18.2.0",
         "semver": "^5.7.1",
         "tmp": "^0.0.33"

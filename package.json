@@ -13,6 +13,7 @@
         "chai": "^4.3.7",
         "command-exists": "^1.2.9",
         "commander": "^8.3.0",
+        "ethers": "^5.7.2",
         "follow-redirects": "^1.15.2",
         "ganache-cli": "^6.12.2",
         "ipfs-http-client": "^59.0.0",

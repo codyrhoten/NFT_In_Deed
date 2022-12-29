@@ -2,36 +2,39 @@ import { Container } from 'react-bootstrap';
 import axios from 'axios';
 import { ethers } from 'ethers';
 import { houseNftAddress, marketAddress } from '../../config';
+import { useState } from 'react';
 const Marketplace = require('../../artifacts/contracts/Market.sol/Market.json');
 const HouseNFT = require('../../artifacts/contracts/HouseNFT.sol/HouseNFT.json');
 
 function HomePage() {
     const [houses, setHouses] = useState([]);
     const [loadingState, setLoadingState] = useState('not-loaded');
+    const [account, setAccount] = useState(null);
+    const [userBalance, setUserBalance] = useState(null);
 
-    useEffect(async () => {
-        const provider = new ethers.providers.JsonRpcProvider();
+    const loadHouses = async () => {
+        const provider = new ethers.providers.Web3Provider(window.Ethereum);
         const houseNFTContract = new ethers.Contract(houseNftAddress, HouseNFT.abi, provider);
         const marketContract = new ethers.Contract(marketAddress, Marketplace.abi, provider);
         const listings = await marketContract.getListedHouses();
 
         const houses = await Promise.all(listings.map(async i => {
             try {
-                const houseURI = await houseNFTContract.methods.tokenURI(i.tokenId).call();
+                const houseURI = await houseNFTContract.tokenURI(i.tokenId);
                 const meta = await axios.get(houseURI);
                 return {
                     price: i.price,
                     houseId: i.houseId,
                     seller: i.seller,
                     owner: i.buyer,
-                    lotSqFt: meta.data.lotSqFt,
-                    houseSqFt: meta.data.houseSqFt,
+                    address: meta.data.address,
+                    imageURL: meta.data.imageURL,
                     bedrooms: meta.data.bedrooms,
                     bathrooms: meta.data.bathrooms,
                     houseType: meta.data.houseType,
+                    houseSqFt: meta.data.houseSqFt,
+                    lotSqFt: meta.data.lotSqFt,
                     yearBuilt: meta.data.yearBuilt,
-                    location: meta.data.location,
-                    imageURL: meta.data.imageURL,
                     condition: meta.data.condition,
                 }
             } catch (err) {
@@ -42,7 +45,41 @@ function HomePage() {
 
         setHouses(houses.filter(house => house !== null))
         setLoadingState('loaded');
-    }, []);
+    };
+
+    useEffect(loadHouses(), []);
+
+    const getUserBalance = async address => {
+        await provider.getBalance(address, "latest");
+    };
+
+    const buyHouse = async house => {
+        const provider = new ethers.providers.Web3Provider(window.Ethereum);
+        const signer = provider.getSigner();
+
+        if (window.ethereum) {
+            provider.send("eth_requestAccounts", []);/* 
+                .then(async () => {
+                    const signerAddress = await signer.getAddress();
+                    setAccount(signerAddress);
+                    const balance = await signer.getBalance();
+                    setUserBalance(ethers.utils.formatEther(balance));
+                    await getUserBalance(address);
+                }); */
+        } else {
+            console.log('Please install MetaMask');
+            return;
+        }
+       
+        const marketContract = new ethers.Contract(marketAddress, Marketplace.abi, signer);
+        const tx = await marketContract.buyHouse(
+            houseNftAddress, 
+            house.houseId, 
+            { value: house.price }
+        );
+        await tx.wait();
+        loadHouses();
+    }
 
     if (loadingState === 'loaded' && !houses.length) {
         return (<h1>There are no houses on the market at this time</h1>);
@@ -51,7 +88,37 @@ function HomePage() {
             <div className='flex justify-center'>
                 <div className='px-4'>
                     <Container className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-4'>
-                        
+                        {
+                            houses.map((h, i) => {
+                                <div key={i} className='border shadow rounded-xl overflow-hidden'>
+                                    <img src={h.imageURL} />
+                                    <div className='p-4'>
+                                        <p
+                                            style={{ height: '64px' }}
+                                            className='text-2xl font-semibold'
+                                        >
+                                            {h.address}
+                                        </p>
+                                        <div style={{ height: '70px', overflow: 'hidden' }}>
+                                            <p className='text-gray-400'>
+                                                {`${h.bedrooms} bed, ${h.bathrooms} bath, ${h.houseType}, ${h.houseSqFt} sq ft home, ${h.lotSqFt} sq ft lot, built ${h.yearBuilt}`}
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div className='p-4 bg-black'>
+                                        <p className='text-2xl font-bold text-white'>
+                                            {ethers.utils.formatEther(h.price)} ETH
+                                        </p>
+                                        <button
+                                            className='mt-4 w-full bg-teal-400 text-white font-bold py-2 px-12 rounded'
+                                            onClick={() => buyHouse(h)}
+                                        >
+                                            Buy
+                                        </button>
+                                    </div>
+                                </div>
+                            })
+                        }
                     </Container>
                 </div>
             </div>

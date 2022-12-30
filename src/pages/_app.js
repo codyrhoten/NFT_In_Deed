@@ -2,7 +2,7 @@ import Head from 'next/head';
 import Layout from '../components/Layout';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-const Dapp = ({ Component, pageProps }) => {
+export default function Dapp({ Component, pageProps }) {
     return (
         <>
             <Head><title>NFT in Deed</title></Head>
@@ -11,6 +11,4 @@ const Dapp = ({ Component, pageProps }) => {
             </Layout>
         </>
     )
-};
-
-export default Dapp;
+}

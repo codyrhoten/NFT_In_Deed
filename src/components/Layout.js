@@ -1,12 +1,10 @@
 import { Container } from "react-bootstrap";
 import Header from "./Header";
 
-const Layout = () => {
+export default function Layout() {
     return (
         <Container>
             <Header />
         </Container>
     );
-};
-
-export default Layout;
+}

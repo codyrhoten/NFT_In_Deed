@@ -1,6 +1,6 @@
 import { Navbar, Nav, Container } from 'react-bootstrap'
 
-const Header = () => {
+export default function Header() {
     return (
         <Navbar className='border p-6 rounded'>
             <Container className='flex mt-4'>
@@ -11,7 +11,7 @@ const Header = () => {
                             Home
                         </Nav.Link></Nav.Item>
                         <Nav.Item><Nav.Link href='/mint-and-list-house'>
-                            Sell a home
+                            List a home
                         </Nav.Link></Nav.Item>
                         <Nav.Item><Nav.Link href='/my-houses'>
                             My houses
@@ -24,6 +24,4 @@ const Header = () => {
             </Container>
         </Navbar>
     );
-};
-
-export default Header;
+}

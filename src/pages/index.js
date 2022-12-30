@@ -2,17 +2,15 @@ import { Container } from 'react-bootstrap';
 import axios from 'axios';
 import { ethers } from 'ethers';
 import { houseNftAddress, marketAddress } from '../../config';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 const Marketplace = require('../../artifacts/contracts/Market.sol/Market.json');
 const HouseNFT = require('../../artifacts/contracts/HouseNFT.sol/HouseNFT.json');
 
-function HomePage() {
+export default function HomePage() {
     const [houses, setHouses] = useState([]);
     const [loadingState, setLoadingState] = useState('not-loaded');
-    const [account, setAccount] = useState(null);
-    const [userBalance, setUserBalance] = useState(null);
 
-    const loadHouses = async () => {
+    async function loadHouses() {
         const provider = new ethers.providers.Web3Provider(window.Ethereum);
         const houseNFTContract = new ethers.Contract(houseNftAddress, HouseNFT.abi, provider);
         const marketContract = new ethers.Contract(marketAddress, Marketplace.abi, provider);
@@ -31,11 +29,9 @@ function HomePage() {
                     imageURL: meta.data.imageURL,
                     bedrooms: meta.data.bedrooms,
                     bathrooms: meta.data.bathrooms,
-                    houseType: meta.data.houseType,
                     houseSqFt: meta.data.houseSqFt,
                     lotSqFt: meta.data.lotSqFt,
                     yearBuilt: meta.data.yearBuilt,
-                    condition: meta.data.condition,
                 }
             } catch (err) {
                 console.log(err)
@@ -45,27 +41,16 @@ function HomePage() {
 
         setHouses(houses.filter(house => house !== null))
         setLoadingState('loaded');
-    };
+    }
 
     useEffect(loadHouses(), []);
 
-    const getUserBalance = async address => {
-        await provider.getBalance(address, "latest");
-    };
-
-    const buyHouse = async house => {
+    async function buyHouse(house) {
         const provider = new ethers.providers.Web3Provider(window.Ethereum);
         const signer = provider.getSigner();
 
         if (window.ethereum) {
-            provider.send("eth_requestAccounts", []);/* 
-                .then(async () => {
-                    const signerAddress = await signer.getAddress();
-                    setAccount(signerAddress);
-                    const balance = await signer.getBalance();
-                    setUserBalance(ethers.utils.formatEther(balance));
-                    await getUserBalance(address);
-                }); */
+            provider.send("eth_requestAccounts", []);
         } else {
             console.log('Please install MetaMask');
             return;
@@ -77,7 +62,8 @@ function HomePage() {
             house.houseId, 
             { value: house.price }
         );
-        await tx.wait();
+        const receipt = await tx.wait();
+        console.log(receipt);
         loadHouses();
     }
 
@@ -101,13 +87,13 @@ function HomePage() {
                                         </p>
                                         <div style={{ height: '70px', overflow: 'hidden' }}>
                                             <p className='text-gray-400'>
-                                                {`${h.bedrooms} bed, ${h.bathrooms} bath, ${h.houseType}, ${h.houseSqFt} sq ft home, ${h.lotSqFt} sq ft lot, built ${h.yearBuilt}`}
+                                                {`${h.bedrooms} bed, ${h.bathrooms} bath, ${h.houseSqFt} sq ft home, ${h.lotSqFt} sq ft lot, built ${h.yearBuilt}`}
                                             </p>
                                         </div>
                                     </div>
                                     <div className='p-4 bg-black'>
                                         <p className='text-2xl font-bold text-white'>
-                                            {ethers.utils.formatEther(h.price)} ETH
+                                            {h.price} ETH
                                         </p>
                                         <button
                                             className='mt-4 w-full bg-teal-400 text-white font-bold py-2 px-12 rounded'
@@ -125,5 +111,3 @@ function HomePage() {
         );
     }
 }
-
-export default HomePage;

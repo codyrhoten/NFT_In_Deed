@@ -5,7 +5,7 @@ import { ethers } from 'ethers';
 const Marketplace = require('../../artifacts/contracts/Market.sol/Market.json');
 const HouseNFT = require('../../artifacts/contracts/HouseNFT.sol/HouseNFT.json');
 import { houseNftAddress, marketAddress } from '../../config';
-import { Col, Container, Form, Row } from 'react-bootstrap';
+import { Button, Col, Container, Form, Row } from 'react-bootstrap';
 
 const projectSecret = process.env["IPFS_KEY_SECRET"];
 const projectId = process.env["IPFS_PROJECT_ID"];
@@ -223,13 +223,25 @@ export default function ListHome() {
                                 lotSqFt: e.target.value
                             })}
                         />
+                        <Form.Control
+                            as={Col}
+                            placeholder='year built'
+                            className='mt-8 border rounded p-4'
+                            value={formInput.yearBuilt ? formInput.yearBuilt : ''}
+                            onChange={e => updateFormInput({
+                                ...formInput,
+                                yearBuilt: e.target.value
+                            })}
+                        />
                     </Row>
-        
+                    <Button 
+                        type='submit' 
+                        className='font-bold mt-4 bg-teal-400 text-white rounded p-4 shadow-lg'
+                        onClick={mintAndListHouse}
+                    >
+                        Mint and list house
+                    </Button>
                 </Form>
-
-                <button onClick={listNFTForSale} className="font-bold mt-4 bg-teal-400 text-white rounded p-4 shadow-lg">
-                    Mint and list NFT
-                </button>
             </div>
         </Container>
     )

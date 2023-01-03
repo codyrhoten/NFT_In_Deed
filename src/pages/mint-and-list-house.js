@@ -131,7 +131,7 @@ export default function ListHome() {
         let bedrooms = [];
 
         for (let i = 1; i <= 8; i++) {
-            bedrooms.push(<option>{i.toString()}</option>);
+            bedrooms.push(<option key={i}>{i.toString()}</option>);
         }
 
         return bedrooms;
@@ -142,7 +142,7 @@ export default function ListHome() {
 
         for (let i = 2; i <= 12; i++) {
             const option = (i / 2).toString();
-            bathrooms.push(<option>{option}</option>);
+            bathrooms.push(<option key={i}>{option}</option>);
         }
 
         return bathrooms;
@@ -158,7 +158,7 @@ export default function ListHome() {
                     <Row className='align-items-center'>
                         <Col sm={9}>
                             <Form.Control
-                                placeholder='street name, apt/suite/floor, city, state, zip code'
+                                placeholder='street, apt/suite/floor, city, state, zip'
                                 className='mt-8 border rounded p-4'
                                 value={formInput.address ? formInput.address : ''}
                                 onChange={e => updateFormInput({
@@ -204,8 +204,7 @@ export default function ListHome() {
                     </Row>
                     <Row>
                         <Form.Control
-                            as={Col}
-                            placeholder='house sq ft (number)'
+                            placeholder='house sq ft'
                             className='mt-8 border rounded p-4'
                             value={formInput.houseSqFt ? formInput.houseSqFt : ''}
                             onChange={e => updateFormInput({
@@ -214,8 +213,7 @@ export default function ListHome() {
                             })}
                         />
                         <Form.Control
-                            as={Col}
-                            placeholder='lot sq ft (number)'
+                            placeholder='lot sq ft'
                             className='mt-8 border rounded p-4'
                             value={formInput.lotSqFt ? formInput.lotSqFt : ''}
                             onChange={e => updateFormInput({
@@ -224,7 +222,6 @@ export default function ListHome() {
                             })}
                         />
                         <Form.Control
-                            as={Col}
                             placeholder='year built'
                             className='mt-8 border rounded p-4'
                             value={formInput.yearBuilt ? formInput.yearBuilt : ''}

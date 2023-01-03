@@ -9,18 +9,20 @@ const HouseNFT = require('../../artifacts/contracts/HouseNFT.sol/HouseNFT.json')
 export default function HomePage() {
     const [houses, setHouses] = useState([]);
     const [loadingState, setLoadingState] = useState('not-loaded');
-
+    // need to deploy contracts before using this function
     async function loadHouses() {
-        const provider = new ethers.providers.Web3Provider(window.Ethereum);
+        const provider = new ethers.providers.Web3Provider(ethereum);
+        ethereum.request({ method: 'eth_requestAccounts' });
+
         const houseNFTContract = new ethers.Contract(houseNftAddress, HouseNFT.abi, provider);
         const marketContract = new ethers.Contract(marketAddress, Marketplace.abi, provider);
         const listings = await marketContract.getListedHouses();
 
-        const houses = await Promise.all(listings.map(async i => {
+        const _houses = await Promise.all(listings.map(async i => {
             try {
                 const houseURI = await houseNFTContract.tokenURI(i.tokenId);
                 const meta = await axios.get(houseURI);
-                return {
+                const house = {
                     price: i.price,
                     houseId: i.houseId,
                     seller: i.seller,
@@ -32,18 +34,19 @@ export default function HomePage() {
                     houseSqFt: meta.data.houseSqFt,
                     lotSqFt: meta.data.lotSqFt,
                     yearBuilt: meta.data.yearBuilt,
-                }
+                };
+                return house;
             } catch (err) {
-                console.log(err)
+                console.log(err);
                 return null;
             }
         }));
 
-        setHouses(houses.filter(house => house !== null))
+        setHouses(_houses.filter(house => house !== null));
         setLoadingState('loaded');
     }
 
-    useEffect(loadHouses(), []);
+    // useEffect(loadHouses(), []);
 
     async function buyHouse(house) {
         const provider = new ethers.providers.Web3Provider(window.Ethereum);
@@ -67,9 +70,9 @@ export default function HomePage() {
         loadHouses();
     }
 
-    if (loadingState === 'loaded' && !houses.length) {
+    /* if (loadingState === 'loaded' && !houses.length) { */
         return (<h1>There are no houses on the market at this time</h1>);
-    } else {
+    /* } else {
         return (
             <div className='flex justify-center'>
                 <div className='px-4'>
@@ -109,5 +112,5 @@ export default function HomePage() {
                 </div>
             </div>
         );
-    }
+    } */
 }

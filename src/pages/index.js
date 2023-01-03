@@ -71,7 +71,11 @@ export default function HomePage() {
     }
 
     /* if (loadingState === 'loaded' && !houses.length) { */
-        return (<h1>There are no houses on the market at this time</h1>);
+        return (
+            <h3 className='mt-5 text-center'>
+                <i>There are no houses on the market at this time</i>
+            </h3>
+        );
     /* } else {
         return (
             <div className='flex justify-center'>

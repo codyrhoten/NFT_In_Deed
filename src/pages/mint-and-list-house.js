@@ -7,8 +7,8 @@ const HouseNFT = require('../../artifacts/contracts/HouseNFT.sol/HouseNFT.json')
 import { houseNftAddress, marketAddress } from '../../config';
 import { Button, Col, Container, Form, Row } from 'react-bootstrap';
 
-const projectSecret = process.env["IPFS_KEY_SECRET"];
-const projectId = process.env["IPFS_PROJECT_ID"];
+const projectSecret = process.env.NEXT_PUBLIC_IPFS_KEY_SECRET;
+const projectId = process.env.NEXT_PUBLIC_IPFS_PROJECT_ID;
 const auth = 'Basic ' + Buffer.from(projectId + ':' + projectSecret).toString('base64');
 
 const client = ipfsHttpClient({
@@ -35,6 +35,8 @@ export default function ListHome() {
     async function onChange(e) {
         // upload image to IPFS
         const file = e.target.files[0];
+
+        console.log(projectId, projectSecret)
 
         try {
             const added = await client.add(
@@ -151,34 +153,32 @@ export default function ListHome() {
     return (
         <Container className="flex justify-center">
             <div className="w-1/2 flex flex-col pb-12">
-                <h2 className="text-2xl py-2 text-center bg-gray-100 rounded ">
+                <h2 className="text-2xl mt-4 text-center bg-gray-100 rounded ">
                     List your house
                 </h2>
                 <Form>
-                    <Row className='align-items-center'>
-                        <Col sm={9}>
-                            <Form.Control
-                                placeholder='street, apt/suite/floor, city, state, zip'
-                                className='mt-8 border rounded p-4'
-                                value={formInput.address ? formInput.address : ''}
-                                onChange={e => updateFormInput({
-                                    ...formInput,
-                                    address: e.target.value
-                                })}
-                            />
-                        </Col>
-                        <Col sm={3}>
-                            <Form.Control
-                                placeholder='price in ETH'
-                                className='mt-8 border rounded p-4'
-                                value={formInput.priceInEth ? formInput.priceInEth : ''}
-                                onChange={e => updateFormInput({
-                                    ...formInput,
-                                    priceInEth: e.target.value
-                                })}
-                            />
-                        </Col>
-                    </Row>
+                    <Col className='mt-5'>
+                        <Form.Control
+                            placeholder='street, apt/suite/floor, city, state, zip'
+                            className='border rounded p-2'
+                            value={formInput.address ? formInput.address : ''}
+                            onChange={e => updateFormInput({
+                                ...formInput,
+                                address: e.target.value
+                            })}
+                        />
+                    </Col>
+                    <Col sm={2} className='mt-4'>
+                        <Form.Control
+                            placeholder='price in ETH'
+                            className='border rounded p-2'
+                            value={formInput.priceInEth ? formInput.priceInEth : ''}
+                            onChange={e => updateFormInput({
+                                ...formInput,
+                                priceInEth: e.target.value
+                            })}
+                        />
+                    </Col>
                     <Form.Control
                         type="file"
                         name="House"
@@ -186,54 +186,75 @@ export default function ListHome() {
                         onChange={onChange}
                     />
                     {fileUrl && <img className="rounded mt-4" width="350" src={fileUrl} />}
-                    <Row>
-                        <Form.Select
-                            as={Col}
-                            defaultValue='bedrooms'
-                            className='mt-8 border rounded p-4'
-                        >
-                            {getBedroomOptions()}
-                        </Form.Select>
-                        <Form.Select
-                            as={Col}
-                            defaultValue='bathrooms'
-                            className='mt-8 border rounded p-4'
-                        >
-                            {getBathroomOptions()}
-                        </Form.Select>
+                    <Row className='mt-4'>
+                        <Col sm={1}>
+                            <Form.Group>
+                                <Form.Label>Bedrooms</Form.Label>
+                                <Form.Select
+                                    defaultValue='bedrooms'
+                                    className='border rounded p-2'
+                                >
+                                    {getBedroomOptions()}
+                                </Form.Select>
+                            </Form.Group>
+                        </Col>
+                        <Col sm={1}>
+                            <Form.Group>
+                                <Form.Label>Bathrooms</Form.Label>
+                                <Form.Select
+                                    defaultValue='bathrooms'
+                                    className='border rounded p-2'
+                                >
+                                    {getBathroomOptions()}
+                                </Form.Select>
+                            </Form.Group>
+                        </Col>
+                        <Col sm={2}>
+                            <Form.Group>
+                                <Form.Label>Interior Sq Ft</Form.Label>
+                                <Form.Control
+                                    placeholder='1250'
+                                    className='p-2'
+                                    value={formInput.houseSqFt ? formInput.houseSqFt : ''}
+                                    onChange={e => updateFormInput({
+                                        ...formInput,
+                                        houseSqFt: e.target.value
+                                    })}
+                                />
+                            </Form.Group>
+                        </Col>
+                        <Col sm={2}>
+                            <Form.Group>
+                                <Form.Label>Lot Sq Ft</Form.Label>
+                                <Form.Control
+                                    placeholder='10,000'
+                                    className='p-2'
+                                    value={formInput.lotSqFt ? formInput.lotSqFt : ''}
+                                    onChange={e => updateFormInput({
+                                        ...formInput,
+                                        lotSqFt: e.target.value
+                                    })}
+                                />
+                            </Form.Group>
+                        </Col>
+                        <Col sm={2}>
+                            <Form.Group>
+                                <Form.Label>Year built</Form.Label>
+                                <Form.Control
+                                    placeholder='YYYY'
+                                    className='p-2'
+                                    value={formInput.yearBuilt ? formInput.yearBuilt : ''}
+                                    onChange={e => updateFormInput({
+                                        ...formInput,
+                                        yearBuilt: e.target.value
+                                    })}
+                                />
+                            </Form.Group>
+                        </Col>
                     </Row>
-                    <Row>
-                        <Form.Control
-                            placeholder='house sq ft'
-                            className='mt-8 border rounded p-4'
-                            value={formInput.houseSqFt ? formInput.houseSqFt : ''}
-                            onChange={e => updateFormInput({
-                                ...formInput,
-                                houseSqFt: e.target.value
-                            })}
-                        />
-                        <Form.Control
-                            placeholder='lot sq ft'
-                            className='mt-8 border rounded p-4'
-                            value={formInput.lotSqFt ? formInput.lotSqFt : ''}
-                            onChange={e => updateFormInput({
-                                ...formInput,
-                                lotSqFt: e.target.value
-                            })}
-                        />
-                        <Form.Control
-                            placeholder='year built'
-                            className='mt-8 border rounded p-4'
-                            value={formInput.yearBuilt ? formInput.yearBuilt : ''}
-                            onChange={e => updateFormInput({
-                                ...formInput,
-                                yearBuilt: e.target.value
-                            })}
-                        />
-                    </Row>
-                    <Button 
-                        type='submit' 
-                        className='font-bold mt-4 bg-teal-400 text-white rounded p-4 shadow-lg'
+                    <Button
+                        type='submit'
+                        className='mt-4 rounded px-3 py-2 shadow-lg'
                         onClick={mintAndListHouse}
                     >
                         Mint and list house

@@ -9,13 +9,16 @@ const HouseNFT = require('../../artifacts/contracts/HouseNFT.sol/HouseNFT.json')
 export default function HomePage() {
     const [houses, setHouses] = useState([]);
     const [loadingState, setLoadingState] = useState('not-loaded');
-    // need to deploy contracts before using this function
+
     async function loadHouses() {
         const provider = new ethers.providers.Web3Provider(ethereum);
-        ethereum.request({ method: 'eth_requestAccounts' });
+        await ethereum.request({ method: 'eth_requestAccounts' });
+
+        console.log(marketAddress, houseNftAddress)
 
         const houseNFTContract = new ethers.Contract(houseNftAddress, HouseNFT.abi, provider);
         const marketContract = new ethers.Contract(marketAddress, Marketplace.abi, provider);
+        console.log(marketContract)
         const listings = await marketContract.getListedHouses();
 
         const _houses = await Promise.all(listings.map(async i => {
@@ -46,7 +49,7 @@ export default function HomePage() {
         setLoadingState('loaded');
     }
 
-    // useEffect(loadHouses(), []);
+    useEffect(() => { loadHouses() }, []);
 
     async function buyHouse(house) {
         const provider = new ethers.providers.Web3Provider(window.Ethereum);
@@ -58,11 +61,11 @@ export default function HomePage() {
             console.log('Please install MetaMask');
             return;
         }
-       
+
         const marketContract = new ethers.Contract(marketAddress, Marketplace.abi, signer);
         const tx = await marketContract.buyHouse(
-            houseNftAddress, 
-            house.houseId, 
+            houseNftAddress,
+            house.houseId,
             { value: house.price }
         );
         const receipt = await tx.wait();
@@ -70,13 +73,13 @@ export default function HomePage() {
         loadHouses();
     }
 
-    /* if (loadingState === 'loaded' && !houses.length) { */
+    if (loadingState === 'loaded' && !houses.length) {
         return (
-            <h3 className='mt-5 text-center'>
+            <h4 className='mt-5 text-center'>
                 <i>There are no houses on the market at this time</i>
-            </h3>
+            </h4>
         );
-    /* } else {
+    } else {
         return (
             <div className='flex justify-center'>
                 <div className='px-4'>
@@ -116,5 +119,5 @@ export default function HomePage() {
                 </div>
             </div>
         );
-    } */
+    }
 }

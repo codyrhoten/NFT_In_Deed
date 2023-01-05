@@ -5,7 +5,7 @@ async function main() {
     console.log('NFT in Deed Market deployed to:', market.address);
 
     const HouseNFT = await ethers.getContractFactory('HouseNFT');
-    const house = await HouseNFT.deploy();
+    const house = await HouseNFT.deploy(market.address);
     await house.deployed();
     console.log('house deployed to:', house.address);
 }

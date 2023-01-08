@@ -102,8 +102,8 @@ export default function ListHome() {
         const url = await uploadToIPFS();
         const signer = provider.getSigner();
 
-
         console.log(provider, ethereum.networkVersion, signer)
+
         try {
             // Mint a house
             const houseNFTContract = new ethers.Contract(houseNftAddress, HouseNFT.abi, signer);
@@ -121,14 +121,16 @@ export default function ListHome() {
             listingFee = listingFee.toString();
             console.log(priceInWei, listingFee);
 
-            await marketContract.listHouse(
+            const listing = await marketContract.listHouse(
                 houseNftAddress,
                 mintedHouseId,
                 priceInWei,
                 { value: listingFee }
             );
-            router.push('/');
-        } catch (err) {
+
+            console.log(listing)
+            // router.push('/');
+        } catch(err) {
             console.log(err.message);
             if (err.message.includes('user rejected transaction')) {
                 setError('The transaction was rejected.')
@@ -193,7 +195,7 @@ export default function ListHome() {
                         className="mt-2"
                         onChange={onChange}
                     />
-                    {fileUrl && <img className="rounded mt-4" width="350" src={fileUrl} />}
+                    {fileUrl && <img className='rounded mt-4' width='350' src={fileUrl} />}
                     <Row className='mt-4'>
                         <Col sm={1}>
                             <Form.Group>

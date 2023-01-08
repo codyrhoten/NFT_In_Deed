@@ -1,10 +1,10 @@
-import { Container } from 'react-bootstrap';
-import axios from 'axios';
+import { useState, useEffect } from 'react';
 import { ethers } from 'ethers';
 import { houseNftAddress, marketAddress } from '../../config';
-import { useState, useEffect } from 'react';
 const Marketplace = require('../../artifacts/contracts/Market.sol/Market.json');
 const HouseNFT = require('../../artifacts/contracts/HouseNFT.sol/HouseNFT.json');
+import axios from 'axios';
+import { Container, Row } from 'react-bootstrap';
 
 export default function HomePage() {
     const [houses, setHouses] = useState([]);
@@ -12,24 +12,23 @@ export default function HomePage() {
 
     async function loadHouses() {
         const provider = new ethers.providers.Web3Provider(ethereum);
-        await ethereum.request({ method: 'eth_requestAccounts' });
-
-        console.log(marketAddress, houseNftAddress)
 
         const houseNFTContract = new ethers.Contract(houseNftAddress, HouseNFT.abi, provider);
         const marketContract = new ethers.Contract(marketAddress, Marketplace.abi, provider);
         console.log(marketContract)
         const listings = await marketContract.getListedHouses();
+        console.log(listings)
 
-        const _houses = await Promise.all(listings.map(async i => {
+        const _houses = await Promise.all(listings.map(async h => {
             try {
-                const houseURI = await houseNFTContract.tokenURI(i.tokenId);
+                const houseURI = await houseNFTContract.tokenURI(h.tokenId);
                 const meta = await axios.get(houseURI);
+                console.log(houseURI, meta)
                 const house = {
-                    price: i.price,
-                    houseId: i.houseId,
-                    seller: i.seller,
-                    owner: i.buyer,
+                    price: h.price,
+                    houseId: h.houseId,
+                    seller: h.seller,
+                    owner: h.buyer,
                     address: meta.data.address,
                     imageURL: meta.data.imageURL,
                     bedrooms: meta.data.bedrooms,
@@ -75,9 +74,11 @@ export default function HomePage() {
 
     if (loadingState === 'loaded' && !houses.length) {
         return (
-            <h4 className='mt-5 text-center'>
-                <i>There are no houses on the market at this time</i>
-            </h4>
+            <Row>
+                <h4 className='mt-5 text-center'>
+                    Be the first to list an NFT in-deed! &#127968;
+                </h4>
+            </Row>
         );
     } else {
         return (

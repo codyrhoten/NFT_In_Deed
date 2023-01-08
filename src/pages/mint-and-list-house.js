@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/router'
 import { create as ipfsHttpClient } from 'ipfs-http-client'
+import Web3Modal from 'web3modal';
 import { ethers } from 'ethers';
 const Marketplace = require('../../artifacts/contracts/Market.sol/Market.json');
 const HouseNFT = require('../../artifacts/contracts/HouseNFT.sol/HouseNFT.json');
@@ -30,13 +31,12 @@ export default function ListHome() {
         lotSqFt: '',
         yearBuilt: '',
     });
+    const [error, setError] = useState('');
     const router = useRouter();
 
     async function onChange(e) {
         // upload image to IPFS
         const file = e.target.files[0];
-
-        console.log(projectId, projectSecret)
 
         try {
             const added = await client.add(
@@ -54,7 +54,6 @@ export default function ListHome() {
         const {
             priceInEth,
             address,
-            imageURL,
             bedrooms,
             bathrooms,
             houseSqFt,
@@ -65,9 +64,6 @@ export default function ListHome() {
         if (
             !priceInEth ||
             !address ||
-            !imageURL ||
-            !bedrooms ||
-            !bathrooms ||
             !houseSqFt ||
             !lotSqFt ||
             !yearBuilt
@@ -76,7 +72,6 @@ export default function ListHome() {
         } else {
             // upload metadata to IPFS
             const data = JSON.stringify({
-                priceInEth,
                 address,
                 imageURL: fileUrl,
                 bedrooms,
@@ -98,42 +93,54 @@ export default function ListHome() {
         }
     }
 
-    async function mintAndListHouse() {
-        const provider = new ethers.providers.Web3Provider(window.Ethereum);
+    async function mintAndListHouse(e) {
+        e.preventDefault();
+
+        const web3Modal = new Web3Modal();
+        const connection = await web3Modal.connect();
+        const provider = new ethers.providers.Web3Provider(connection);
         const url = await uploadToIPFS();
         const signer = provider.getSigner();
 
-        // Mint a house
-        const houseNFTContract = new ethers.Contract(houseNftAddress, HouseNFT.abi, signer);
-        const marketContract = new ethers.Contract(marketAddress, Marketplace.abi, signer);
 
-        let mintedHouse = await houseNFTContract.mint(url);
-        let mintTx = await mintedHouse.wait();
-        let mintEvent = mintTx.events[0];
-        let mintedHouseId = mintEvent.args[2];
-        console.log('minted house ', mintedHouseId);
+        console.log(provider, ethereum.networkVersion, signer)
+        try {
+            // Mint a house
+            const houseNFTContract = new ethers.Contract(houseNftAddress, HouseNFT.abi, signer);
+            const marketContract = new ethers.Contract(marketAddress, Marketplace.abi, signer);
 
-        // List the house
-        let priceInWei = ethers.utils.parseUnits(formInput.priceInEth, 'ether');
-        let listingFee = await marketContract.getListingFee(priceInWei);
-        listingFee = listingFee.toString();
-        console.log(listingFee);
+            let mintedHouse = await houseNFTContract.mint(url);
+            let mintTx = await mintedHouse.wait();
+            let mintEvent = mintTx.events[0];
+            let mintedHouseId = mintEvent.args[2];
+            console.log('minted house ', mintedHouseId);
 
-        const listTx = await marketContract.listHouse(
-            houseNftAddress,
-            mintedHouseId,
-            priceInWei,
-            { value: listingFee }
-        );
-        console.log('listed house tx: ', listTx.hash);
-        router.push('/');
+            // List the house
+            let priceInWei = ethers.utils.parseUnits(formInput.priceInEth, 'ether');
+            let listingFee = await marketContract.getListingFee(priceInWei);
+            listingFee = listingFee.toString();
+            console.log(priceInWei, listingFee);
+
+            await marketContract.listHouse(
+                houseNftAddress,
+                mintedHouseId,
+                priceInWei,
+                { value: listingFee }
+            );
+            router.push('/');
+        } catch (err) {
+            console.log(err.message);
+            if (err.message.includes('user rejected transaction')) {
+                setError('The transaction was rejected.')
+            }
+        }
     }
 
     function getBedroomOptions() {
         let bedrooms = [];
 
         for (let i = 1; i <= 8; i++) {
-            bedrooms.push(<option key={i}>{i.toString()}</option>);
+            bedrooms.push(<option key={i} option={i.toString()}>{i.toString()}</option>);
         }
 
         return bedrooms;
@@ -144,7 +151,7 @@ export default function ListHome() {
 
         for (let i = 2; i <= 12; i++) {
             const option = (i / 2).toString();
-            bathrooms.push(<option key={i}>{option}</option>);
+            bathrooms.push(<option key={i} value={option}>{option}</option>);
         }
 
         return bathrooms;
@@ -156,8 +163,9 @@ export default function ListHome() {
                 <h2 className="text-2xl mt-4 text-center bg-gray-100 rounded ">
                     List your house
                 </h2>
-                <Form>
-                    <Col className='mt-5'>
+                <Form onSubmit={mintAndListHouse}>
+                    {error && <p className='text-center text-danger mt-5'>{error}</p>}
+                    <Col className={error ? 'mt-1' : 'mt-5'}>
                         <Form.Control
                             placeholder='street, apt/suite/floor, city, state, zip'
                             className='border rounded p-2'
@@ -182,7 +190,7 @@ export default function ListHome() {
                     <Form.Control
                         type="file"
                         name="House"
-                        className="my-4"
+                        className="mt-2"
                         onChange={onChange}
                     />
                     {fileUrl && <img className="rounded mt-4" width="350" src={fileUrl} />}
@@ -193,6 +201,10 @@ export default function ListHome() {
                                 <Form.Select
                                     defaultValue='bedrooms'
                                     className='border rounded p-2'
+                                    onChange={e => updateFormInput({
+                                        ...formInput,
+                                        bedrooms: e.target.value
+                                    })}
                                 >
                                     {getBedroomOptions()}
                                 </Form.Select>
@@ -204,6 +216,10 @@ export default function ListHome() {
                                 <Form.Select
                                     defaultValue='bathrooms'
                                     className='border rounded p-2'
+                                    onChange={e => updateFormInput({
+                                        ...formInput,
+                                        bathrooms: e.target.value
+                                    })}
                                 >
                                     {getBathroomOptions()}
                                 </Form.Select>
@@ -254,8 +270,7 @@ export default function ListHome() {
                     </Row>
                     <Button
                         type='submit'
-                        className='mt-4 rounded px-3 py-2 shadow-lg'
-                        onClick={mintAndListHouse}
+                        className='my-4 rounded px-3 py-2 shadow-lg'
                     >
                         Mint and list house
                     </Button>

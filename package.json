@@ -8,6 +8,8 @@
         "@nomicfoundation/hardhat-network-helpers": "^1.0.7",
         "@nomicfoundation/hardhat-toolbox": "^1.0.2",
         "@openzeppelin/contracts": "^4.8.0",
+        "@web3modal/ethereum": "^2.0.0-rc.1",
+        "@web3modal/react": "^2.0.0-rc.1",
         "axios": "^1.2.1",
         "bootstrap": "^5.2.3",
         "chai": "^4.3.7",
@@ -25,7 +27,9 @@
         "react-bootstrap": "^2.7.0",
         "react-dom": "^18.2.0",
         "semver": "^5.7.1",
-        "tmp": "^0.0.33"
+        "tmp": "^0.0.33",
+        "wagmi": "^0.10.5",
+        "web3modal": "^1.9.11"
     },
     "devDependencies": {
         "hardhat": "^2.12.3",

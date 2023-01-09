@@ -102,8 +102,6 @@ export default function ListHome() {
         const url = await uploadToIPFS();
         const signer = provider.getSigner();
 
-        console.log(provider, ethereum.networkVersion, signer)
-
         try {
             // Mint a house
             const houseNFTContract = new ethers.Contract(houseNftAddress, HouseNFT.abi, signer);
@@ -119,7 +117,6 @@ export default function ListHome() {
             let priceInWei = ethers.utils.parseUnits(formInput.priceInEth, 'ether');
             let listingFee = await marketContract.getListingFee(priceInWei);
             listingFee = listingFee.toString();
-            console.log(priceInWei, listingFee);
 
             const listing = await marketContract.listHouse(
                 houseNftAddress,
@@ -128,9 +125,8 @@ export default function ListHome() {
                 { value: listingFee }
             );
 
-            console.log(listing)
-            // router.push('/');
-        } catch(err) {
+            router.push('/');
+        } catch (err) {
             console.log(err.message);
             if (err.message.includes('user rejected transaction')) {
                 setError('The transaction was rejected.')
@@ -165,7 +161,7 @@ export default function ListHome() {
                 <h2 className="text-2xl mt-4 text-center bg-gray-100 rounded ">
                     List your house
                 </h2>
-                <Form onSubmit={mintAndListHouse}>
+                <Form className='justify-content-md-center' onSubmit={mintAndListHouse}>
                     {error && <p className='text-center text-danger mt-5'>{error}</p>}
                     <Col className={error ? 'mt-1' : 'mt-5'}>
                         <Form.Control
@@ -181,7 +177,7 @@ export default function ListHome() {
                     <Col sm={2} className='mt-4'>
                         <Form.Control
                             placeholder='price in ETH'
-                            className='border rounded p-2'
+                            className='border rounded'
                             value={formInput.priceInEth ? formInput.priceInEth : ''}
                             onChange={e => updateFormInput({
                                 ...formInput,
@@ -192,17 +188,15 @@ export default function ListHome() {
                     <Form.Control
                         type="file"
                         name="House"
-                        className="mt-2"
+                        className="mt-4"
                         onChange={onChange}
                     />
                     {fileUrl && <img className='rounded mt-4' width='350' src={fileUrl} />}
-                    <Row className='mt-4'>
+                    <Row className='mt-4' xs={2}>
                         <Col sm={1}>
                             <Form.Group>
                                 <Form.Label>Bedrooms</Form.Label>
                                 <Form.Select
-                                    defaultValue='bedrooms'
-                                    className='border rounded p-2'
                                     onChange={e => updateFormInput({
                                         ...formInput,
                                         bedrooms: e.target.value
@@ -216,8 +210,6 @@ export default function ListHome() {
                             <Form.Group>
                                 <Form.Label>Bathrooms</Form.Label>
                                 <Form.Select
-                                    defaultValue='bathrooms'
-                                    className='border rounded p-2'
                                     onChange={e => updateFormInput({
                                         ...formInput,
                                         bathrooms: e.target.value
@@ -232,7 +224,6 @@ export default function ListHome() {
                                 <Form.Label>Interior Sq Ft</Form.Label>
                                 <Form.Control
                                     placeholder='1250'
-                                    className='p-2'
                                     value={formInput.houseSqFt ? formInput.houseSqFt : ''}
                                     onChange={e => updateFormInput({
                                         ...formInput,
@@ -246,7 +237,6 @@ export default function ListHome() {
                                 <Form.Label>Lot Sq Ft</Form.Label>
                                 <Form.Control
                                     placeholder='10,000'
-                                    className='p-2'
                                     value={formInput.lotSqFt ? formInput.lotSqFt : ''}
                                     onChange={e => updateFormInput({
                                         ...formInput,
@@ -260,7 +250,6 @@ export default function ListHome() {
                                 <Form.Label>Year built</Form.Label>
                                 <Form.Control
                                     placeholder='YYYY'
-                                    className='p-2'
                                     value={formInput.yearBuilt ? formInput.yearBuilt : ''}
                                     onChange={e => updateFormInput({
                                         ...formInput,
@@ -270,12 +259,14 @@ export default function ListHome() {
                             </Form.Group>
                         </Col>
                     </Row>
-                    <Button
-                        type='submit'
-                        className='my-4 rounded px-3 py-2 shadow-lg'
-                    >
-                        Mint and list house
-                    </Button>
+                    <div className='text-center'>
+                        <Button
+                            type='submit'
+                            className='my-4 rounded px-5 py-2 shadow-lg'
+                        >
+                            Mint and list house
+                        </Button>
+                    </div>
                 </Form>
             </div>
         </Container>

@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import Web3Modal from 'web3modal';
 import { ethers } from 'ethers';
 import { houseNftAddress, marketAddress } from '../../config';
 const Marketplace = require('../../artifacts/contracts/Market.sol/Market.json');
@@ -12,18 +13,15 @@ export default function HomePage() {
 
     async function loadHouses() {
         const provider = new ethers.providers.Web3Provider(ethereum);
-
         const houseNFTContract = new ethers.Contract(houseNftAddress, HouseNFT.abi, provider);
         const marketContract = new ethers.Contract(marketAddress, Marketplace.abi, provider);
         const listings = await marketContract.getListedHouses();
-        console.log(listings);
 
         const _houses = await Promise.all(listings.map(async h => {
             try {
                 const houseURI = await houseNFTContract.tokenURI(h.houseId);
                 const meta = await axios.get(houseURI);
                 let price = ethers.utils.formatUnits(h.price.toString(), 'ether');
-                console.log(houseURI, meta)
                 const house = {
                     price: Math.trunc(price),
                     houseId: h.houseId.toNumber(),
@@ -45,31 +43,32 @@ export default function HomePage() {
         }));
 
         setHouses(_houses.filter(house => house !== null));
-        console.log(houses)
         setLoadingState('loaded');
     }
 
     useEffect(() => { loadHouses() }, []);
 
     async function buyHouse(house) {
-        const provider = new ethers.providers.Web3Provider(ethereum);
+        const web3Modal = new Web3Modal();
+        const connection = await web3Modal.connect();
+        const provider = new ethers.providers.Web3Provider(connection);
         const signer = provider.getSigner();
 
-        if (ethereum) {
-            provider.send("eth_requestAccounts", []);
-        } else {
-            console.log('Please install MetaMask');
-            return;
+        try {
+            const marketContract = new ethers.Contract(marketAddress, Marketplace.abi, signer);
+
+            const tx = await marketContract.buyHouse(
+                houseNftAddress,
+                house.houseId,
+                { value: house.price }
+            );
+
+            const receipt = await tx.wait();
+            console.log(receipt);
+        } catch (err) {
+            console.log(err)
         }
 
-        const marketContract = new ethers.Contract(marketAddress, Marketplace.abi, signer);
-        const tx = await marketContract.buyHouse(
-            houseNftAddress,
-            house.houseId,
-            { value: house.price }
-        );
-        const receipt = await tx.wait();
-        console.log(receipt);
         loadHouses();
     }
 
@@ -86,20 +85,20 @@ export default function HomePage() {
             <div className='flex justify-center'>
                 <div className='px-4'>
                     <Container /* className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-4' */>
-                        <Row xs={1} md={3}>
+                        <Row xs={1} md={2}>
                             {houses.map((h, i) => (
-                                <Col key={i} className='shadow rounded overflow-hidden m-2'>
-                                    <p className='text-center mt-3'>{h.address}</p>
+                                <Col key={i} className='shadow rounded overflow-hidden mx-2' lg={true}>
+                                    <p className='text-center mt-3'><b>{h.address}</b></p>
                                     <div className='text-center'>
-                                        <img src={h.imageURL} className='rounded' height='100' />
+                                        <img src={h.imageURL} className='rounded' height='125' />
                                     </div>
-                                    <p align='center'>{h.price} ETH</p>
-                                    <p className='p-1' align='center'>
+                                    <p className='text-center mt-2'>{h.price} ETH</p>
+                                    <p align='center'>
                                         {`${h.bedrooms} bed, ${h.bathrooms} bath, ${h.houseSqFt} sq ft home, ${h.lotSqFt} sq ft lot, built ${h.yearBuilt}`}
                                     </p>
                                     <div className='text-center'>
                                         <Button
-                                            className='px-3 mx-auto mb-2'
+                                            className='px-3 mx-auto mb-4'
                                             onClick={() => { buyHouse(h) }}
                                         >
                                             Buy

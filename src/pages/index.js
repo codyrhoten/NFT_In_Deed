@@ -43,6 +43,7 @@ export default function HomePage() {
         }));
 
         setHouses(_houses.filter(house => house !== null));
+        console.log(houses)
         setLoadingState('loaded');
     }
 
@@ -53,6 +54,7 @@ export default function HomePage() {
         const connection = await web3Modal.connect();
         const provider = new ethers.providers.Web3Provider(connection);
         const signer = provider.getSigner();
+        const priceInWei = ethers.utils.parseUnits(house.price.toString(), 'ether');
 
         try {
             const marketContract = new ethers.Contract(marketAddress, Marketplace.abi, signer);
@@ -60,7 +62,7 @@ export default function HomePage() {
             const tx = await marketContract.buyHouse(
                 houseNftAddress,
                 house.houseId,
-                { value: house.price }
+                { value: priceInWei }
             );
 
             const receipt = await tx.wait();

@@ -7,7 +7,8 @@ import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 
 contract Market is ReentrancyGuard {
     using Counters for Counters.Counter;
-    Counters.Counter private listedHouses;
+    Counters.Counter private houseCount;
+    Counters.Counter private housesSold;
     address payable private marketOwner;
 
     struct House {
@@ -18,18 +19,6 @@ contract Market is ReentrancyGuard {
         uint256 price;
         bool listed;
     }
-
-    /* struct details {
-        uint256 lotSqFt;
-        uint256 houseSqFt;
-        uint256 bedrooms;
-        uint256 bathrooms;
-        string houseType;
-        uint256 yearBuilt;
-        string[] location;
-        string imageURL;
-        string condition;
-    } */
 
     mapping(uint256 => House) private idToHouse;
 
@@ -68,14 +57,6 @@ contract Market is ReentrancyGuard {
         return fee;
     }
 
-    // function etherToWei(uint256 _ether) private pure returns (uint256) {
-    //     return _ether * 10e18;
-    // }
-
-    // function weiToEther(uint256 _wei) private pure returns (uint256) {
-    //     return _wei / 10e18;
-    // }
-
     function getMarketOwner() external view onlyMarketOwner returns (address) {
         return marketOwner;
     }
@@ -105,7 +86,8 @@ contract Market is ReentrancyGuard {
             address(this),
             _houseId
         );
-        listedHouses.increment();
+
+        houseCount.increment();
 
         idToHouse[_houseId] = House(
             _houseId,
@@ -147,7 +129,7 @@ contract Market is ReentrancyGuard {
         _house.owner = payable(msg.sender);
         _house.listed = false;
         payable(marketOwner).transfer(listingFee);
-        listedHouses.decrement();
+        housesSold.increment();
 
         emit HouseSold(
             _houseId,
@@ -160,13 +142,13 @@ contract Market is ReentrancyGuard {
     }
 
     function getListedHouses() public view returns (House[] memory) {
-        uint256 houseCount = listedHouses.current();
-        House[] memory houses = new House[](houseCount);
+        uint256 _houseCount = houseCount.current();
+        uint256 listedHouses = _houseCount - housesSold.current();
+        House[] memory houses = new House[](listedHouses);
 
-        for (uint256 i = 0; i < houseCount; i++) {
+        for (uint256 i = 0; i < _houseCount; i++) {
             if (idToHouse[i + 1].listed) {
-                House storage currentHouse = idToHouse[i + 1];
-                houses[i] = currentHouse;
+                houses[i] = idToHouse[i + 1];
             }
         }
 
@@ -174,10 +156,10 @@ contract Market is ReentrancyGuard {
     }
 
     function getMyHouses() public view returns (House[] memory) {
-        uint256 houseCount = listedHouses.current();
+        uint256 _houseCount = houseCount.current();
         uint256 myHouseCount = 0;
 
-        for (uint256 i = 0; i < houseCount; i++) {
+        for (uint256 i = 0; i < _houseCount; i++) {
             if (idToHouse[i + 1].owner == msg.sender) {
                 myHouseCount++;
             }
@@ -185,10 +167,9 @@ contract Market is ReentrancyGuard {
 
         House[] memory myHouses = new House[](myHouseCount);
 
-        for (uint256 i = 0; i < houseCount; i++) {
+        for (uint256 i = 0; i < _houseCount; i++) {
             if (idToHouse[i + 1].owner == msg.sender) {
-                House storage currentHouse = idToHouse[i + 1];
-                myHouses[i] = currentHouse;
+                myHouses[i] =  idToHouse[i + 1];
             }
         }
 
@@ -196,19 +177,19 @@ contract Market is ReentrancyGuard {
     }
 
     function getMyListedHouses() public view returns (House[] memory) {
-        uint256 houseCount = listedHouses.current();
+        uint256 _houseCount = houseCount.current();
         uint256 myListedHouseCount = 0;
 
-        for (uint256 i = 0; i < houseCount; i++) {
-            if (idToHouse[i + 1].seller == msg.sender) {
+        for (uint256 i = 0; i < _houseCount; i++) {
+            if (idToHouse[i + 1].seller == msg.sender && idToHouse[i + 1].listed) {
                 myListedHouseCount++;
             }
         }
 
         House[] memory myListedHouses = new House[](myListedHouseCount);
 
-        for (uint256 i = 0; i < houseCount; i++) {
-            if (idToHouse[i + 1].seller == msg.sender) {
+        for (uint256 i = 0; i < _houseCount; i++) {
+            if (idToHouse[i + 1].seller == msg.sender && idToHouse[i + 1].listed) {
                 myListedHouses[i] = idToHouse[i + 1];
             }
         }

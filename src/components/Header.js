@@ -3,7 +3,7 @@ import ConnectButton from './ConnectButton';
 
 export default function Header({ metamaskInstalled, walletButtonPressed, walletAddress }) {
     return (
-        <Navbar className='border p-6 rounded'>
+        <Navbar className='border p-6 rounded mb-4'>
             <Container className='flex mt-4'>
                 <Navbar.Brand href='/'><b>NFT-in-Deed</b></Navbar.Brand>
                 <Navbar.Collapse id='navbarSupportedContent'>

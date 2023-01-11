@@ -1,23 +1,28 @@
 import { useState, useEffect } from 'react';
 import Web3Modal from 'web3modal';
 import { ethers } from 'ethers';
+import { useRouter } from 'next/router';
 import { houseNftAddress, marketAddress } from '../../config';
 const Marketplace = require('../../artifacts/contracts/Market.sol/Market.json');
 const HouseNFT = require('../../artifacts/contracts/HouseNFT.sol/HouseNFT.json');
 import axios from 'axios';
 import { Button, Col, Container, Row } from 'react-bootstrap';
 
-export default function HomePage() {
+export default function MyHouses() {
     const [houses, setHouses] = useState([]);
     const [loadingState, setLoadingState] = useState('not-loaded');
+    const router = useRouter();
 
     async function loadHouses() {
-        const provider = new ethers.providers.Web3Provider(ethereum);
+        const web3Modal = new Web3Modal();
+        const connection = await web3Modal.connect();
+        const provider = new ethers.providers.Web3Provider(connection);
+        const signer = provider.getSigner();
         const houseNFTContract = new ethers.Contract(houseNftAddress, HouseNFT.abi, provider);
-        const marketContract = new ethers.Contract(marketAddress, Marketplace.abi, provider);
-        let _houses = await marketContract.getListedHouses();
+        const marketContract = new ethers.Contract(marketAddress, Marketplace.abi, signer);
+        let myHouses = await marketContract.getMyHouses();
 
-        _houses = await Promise.all(_houses.map(async h => {
+        myHouses = await Promise.all(myHouses.map(async h => {
             try {
                 const houseURI = await houseNFTContract.tokenURI(h.houseId);
                 const meta = await axios.get(houseURI);
@@ -34,6 +39,7 @@ export default function HomePage() {
                     houseSqFt: meta.data.houseSqFt,
                     lotSqFt: meta.data.lotSqFt,
                     yearBuilt: meta.data.yearBuilt,
+                    houseURI,
                 };
                 return house;
             } catch (err) {
@@ -42,46 +48,27 @@ export default function HomePage() {
             }
         }));
 
-        setHouses(_houses.filter(house => house !== null));
+        setHouses(myHouses.filter(house => house !== null));
+        console.log(houses)
         setLoadingState('loaded');
+    }
+
+    function listHouse(house) {
+        router.push(`resell-house?id=${house.houseId}&houseURI=${house.houseURI}`);
     }
 
     useEffect(() => { loadHouses() }, []);
 
-    async function buyHouse(house) {
-        const web3Modal = new Web3Modal();
-        const connection = await web3Modal.connect();
-        const provider = new ethers.providers.Web3Provider(connection);
-        const signer = provider.getSigner();
-        const priceInWei = ethers.utils.parseUnits(house.price.toString(), 'ether');
-
-        try {
-            const marketContract = new ethers.Contract(marketAddress, Marketplace.abi, signer);
-
-            const tx = await marketContract.buyHouse(
-                houseNftAddress,
-                house.houseId,
-                { value: priceInWei }
-            );
-
-            const receipt = await tx.wait();
-            console.log(receipt);
-        } catch (err) {
-            console.log(err)
-        }
-
-        loadHouses();
-    }
-
     if (loadingState === 'loaded' && houses.length === 0) {
         return (
-            <h4 className='mt-5 text-center'>Be the first to list an NFT in-deed! &#127968;</h4>
+            <h4 className='mt-5 text-center'>You don't have any NFT houses in this wallet</h4>
         );
     } else {
         return (
             <div className='flex justify-center'>
                 <div className='px-4'>
-                    <Container /* className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-4' */>
+                    <Container>
+                    <h4 className='my-4 text-center'>My NFTs-in-Deed</h4>
                         <Row xs={1} md={2}>
                             {houses.map((h, i) => (
                                 <Col key={i} className='shadow rounded overflow-hidden mx-2' lg={true}>
@@ -96,9 +83,9 @@ export default function HomePage() {
                                     <div className='text-center'>
                                         <Button
                                             className='px-3 mx-auto mb-4'
-                                            onClick={() => { buyHouse(h) }}
+                                            onClick={() => { listHouse(h) }}
                                         >
-                                            Buy
+                                            List
                                         </Button>
                                     </div>
                                 </Col>

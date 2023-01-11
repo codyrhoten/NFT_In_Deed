@@ -43,7 +43,6 @@ export default function HomePage() {
         }));
 
         setHouses(_houses.filter(house => house !== null));
-        console.log(houses)
         setLoadingState('loaded');
     }
 

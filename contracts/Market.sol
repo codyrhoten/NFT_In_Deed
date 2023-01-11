@@ -145,10 +145,12 @@ contract Market is ReentrancyGuard {
         uint256 _houseCount = houseCount.current();
         uint256 listedHouses = _houseCount - housesSold.current();
         House[] memory houses = new House[](listedHouses);
+        uint256 houseIndex = 0;
 
         for (uint256 i = 0; i < _houseCount; i++) {
             if (idToHouse[i + 1].listed) {
-                houses[i] = idToHouse[i + 1];
+                houses[houseIndex] = idToHouse[i + 1];
+                houseIndex++;
             }
         }
 
@@ -158,6 +160,7 @@ contract Market is ReentrancyGuard {
     function getMyHouses() public view returns (House[] memory) {
         uint256 _houseCount = houseCount.current();
         uint256 myHouseCount = 0;
+        uint256 houseIndex = 0;
 
         for (uint256 i = 0; i < _houseCount; i++) {
             if (idToHouse[i + 1].owner == msg.sender) {
@@ -169,7 +172,8 @@ contract Market is ReentrancyGuard {
 
         for (uint256 i = 0; i < _houseCount; i++) {
             if (idToHouse[i + 1].owner == msg.sender) {
-                myHouses[i] =  idToHouse[i + 1];
+                myHouses[houseIndex] =  idToHouse[i + 1];
+                houseIndex++;
             }
         }
 
@@ -179,6 +183,7 @@ contract Market is ReentrancyGuard {
     function getMyListedHouses() public view returns (House[] memory) {
         uint256 _houseCount = houseCount.current();
         uint256 myListedHouseCount = 0;
+        uint256 houseIndex = 0;
 
         for (uint256 i = 0; i < _houseCount; i++) {
             if (idToHouse[i + 1].seller == msg.sender && idToHouse[i + 1].listed) {
@@ -190,7 +195,8 @@ contract Market is ReentrancyGuard {
 
         for (uint256 i = 0; i < _houseCount; i++) {
             if (idToHouse[i + 1].seller == msg.sender && idToHouse[i + 1].listed) {
-                myListedHouses[i] = idToHouse[i + 1];
+                myListedHouses[houseIndex] = idToHouse[i + 1];
+                houseIndex++;
             }
         }
 

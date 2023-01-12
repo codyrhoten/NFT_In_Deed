@@ -54,14 +54,14 @@ export default function MyHouses() {
     }
 
     function listHouse(house) {
-        router.push(`resell-house?id=${house.houseId}&houseURI=${house.houseURI}`);
+        router.push(`house-resale?id=${house.houseId}&houseURI=${house.houseURI}`);
     }
 
     useEffect(() => { loadHouses() }, []);
 
     if (loadingState === 'loaded' && houses.length === 0) {
         return (
-            <h4 className='mt-5 text-center'>You don't have any NFT houses in this wallet</h4>
+            <h4 className='mt-5 text-center'>This wallet doesn't contain any NFTs-in-Deed</h4>
         );
     } else {
         return (

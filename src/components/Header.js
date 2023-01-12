@@ -8,8 +8,8 @@ export default function Header({ metamaskInstalled, walletButtonPressed, walletA
                 <Navbar.Brand href='/'><b>NFT-in-Deed</b></Navbar.Brand>
                 <Navbar.Collapse id='navbarSupportedContent'>
                     <Nav className='ms-auto'>
-                        <Nav.Item><Nav.Link href='/mint-and-list-house'>
-                            List a home
+                        <Nav.Item><Nav.Link href='/tokenize-and-list-house'>
+                            Tokenize & list a home
                         </Nav.Link></Nav.Item>
                         <Nav.Item><Nav.Link href='/my-houses'>
                             My houses

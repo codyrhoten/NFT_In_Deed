@@ -93,7 +93,7 @@ export default function ListHome() {
         }
     }
 
-    async function mintAndListHouse(e) {
+    async function tokenizeAndListHouse(e) {
         e.preventDefault();
 
         const web3Modal = new Web3Modal();
@@ -161,7 +161,7 @@ export default function ListHome() {
                 <h2 className="text-2xl mt-4 text-center bg-gray-100 rounded ">
                     List your house
                 </h2>
-                <Form className='justify-content-md-center' onSubmit={mintAndListHouse}>
+                <Form className='justify-content-md-center' onSubmit={tokenizeAndListHouse}>
                     {error && <p className='text-center text-danger mt-5'>{error}</p>}
                     <Col className={error ? 'mt-1' : 'mt-5'}>
                         <Form.Control
@@ -264,7 +264,7 @@ export default function ListHome() {
                             type='submit'
                             className='my-4 rounded px-5 py-2 shadow-lg'
                         >
-                            Mint and list house
+                            Tokenize and list house
                         </Button>
                     </div>
                 </Form>

@@ -46,7 +46,7 @@ export default function HomePage() {
         setLoadingState('loaded');
     }
 
-    useEffect(() => { loadHouses() }, []);
+    useEffect(() => { loadHouses() }, [houses]);
 
     async function buyHouse(house) {
         const web3Modal = new Web3Modal();
@@ -81,10 +81,14 @@ export default function HomePage() {
         return (
             <div className='flex justify-center'>
                 <div className='px-4'>
-                    <Container /* className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-4' */>
+                    <Container>
                         <Row xs={1} md={2}>
                             {houses.map((h, i) => (
-                                <Col key={i} className='shadow rounded overflow-hidden mx-2' lg={true}>
+                                <Col 
+                                    key={i} 
+                                    className='shadow rounded overflow-hidden mx-2' 
+                                    lg={true}
+                                >
                                     <p className='text-center mt-3'><b>{h.address}</b></p>
                                     <div className='text-center'>
                                         <img src={h.imageURL} className='rounded' height='125' />

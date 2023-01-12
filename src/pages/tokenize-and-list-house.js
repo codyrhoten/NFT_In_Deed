@@ -118,7 +118,7 @@ export default function ListHome() {
             let listingFee = await marketContract.getListingFee(priceInWei);
             listingFee = listingFee.toString();
 
-            const listing = await marketContract.listHouse(
+            await marketContract.listHouse(
                 houseNftAddress,
                 mintedHouseId,
                 priceInWei,
@@ -128,6 +128,7 @@ export default function ListHome() {
             router.push('/');
         } catch (err) {
             console.log(err.message);
+
             if (err.message.includes('user rejected transaction')) {
                 setError('The transaction was rejected.')
             }
@@ -158,9 +159,7 @@ export default function ListHome() {
     return (
         <Container className="flex justify-center">
             <div className="w-1/2 flex flex-col pb-12">
-                <h2 className="text-2xl mt-4 text-center bg-gray-100 rounded ">
-                    List your house
-                </h2>
+                <h2 className="text-2xl mt-4 text-center bg-gray-100 rounded ">List your house</h2>
                 <Form className='justify-content-md-center' onSubmit={tokenizeAndListHouse}>
                     {error && <p className='text-center text-danger mt-5'>{error}</p>}
                     <Col className={error ? 'mt-1' : 'mt-5'}>
@@ -191,7 +190,12 @@ export default function ListHome() {
                         className="mt-4"
                         onChange={onChange}
                     />
-                    {fileUrl && <img className='rounded mt-4' width='350' src={fileUrl} />}
+                    {
+                        fileUrl &&
+                        <div className='text-center'>
+                            <img className='rounded mt-4' width='350' src={fileUrl} />
+                        </div>
+                    }
                     <Row className='mt-4' xs={2}>
                         <Col sm={1}>
                             <Form.Group>
@@ -260,10 +264,7 @@ export default function ListHome() {
                         </Col>
                     </Row>
                     <div className='text-center'>
-                        <Button
-                            type='submit'
-                            className='my-4 rounded px-5 py-2 shadow-lg'
-                        >
+                        <Button type='submit' className='my-4 rounded px-5 py-2 shadow-lg'>
                             Tokenize and list house
                         </Button>
                     </div>

@@ -11,22 +11,24 @@ export default function Header({ metamaskInstalled, walletButtonPressed, walletA
                         <Nav.Item><Nav.Link href='/tokenize-and-list-house'>
                             Tokenize & list a home
                         </Nav.Link></Nav.Item>
+                        <div className="vr" />
                         <Nav.Item><Nav.Link href='/my-houses'>
                             My houses
                         </Nav.Link></Nav.Item>
+                        <div className="vr" />
                         <Nav.Item><Nav.Link href='/my-listed-houses'>
                             My listed houses
                         </Nav.Link></Nav.Item>
-                        <Nav.Item>
-                            <ConnectButton
-                                metamaskInstalled={metamaskInstalled}
-                                connectWalletPressed={walletButtonPressed}
-                                walletAddress={walletAddress}
-                            ></ConnectButton>
-                        </Nav.Item>
                     </Nav>
                 </Navbar.Collapse>
-            </Container>
-        </Navbar>
+                <div className='mx-2'>
+                <ConnectButton
+                    metamaskInstalled={metamaskInstalled}
+                    connectWalletPressed={walletButtonPressed}
+                    walletAddress={walletAddress}
+                />
+            </div>
+        </Container>
+        </Navbar >
     );
 }

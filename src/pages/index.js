@@ -6,10 +6,13 @@ const Marketplace = require('../../artifacts/contracts/Market.sol/Market.json');
 const HouseNFT = require('../../artifacts/contracts/HouseNFT.sol/HouseNFT.json');
 import axios from 'axios';
 import { Button, Col, Container, Row } from 'react-bootstrap';
+import { ToastContainer, toast } from 'react-toastify';
+import { notify, update } from '../../utils/notification';
 
 export default function HomePage() {
     const [houses, setHouses] = useState([]);
     const [loadingState, setLoadingState] = useState('not-loaded');
+    const [isTransacting, setIsTransacting] = useState(false);
 
     async function loadHouses() {
         const provider = new ethers.providers.Web3Provider(ethereum);
@@ -47,6 +50,7 @@ export default function HomePage() {
     useEffect(() => { loadHouses() }, [houses]);
 
     async function buyHouse(house) {
+        setIsTransacting(true);
         const web3Modal = new Web3Modal();
         const connection = await web3Modal.connect();
         const provider = new ethers.providers.Web3Provider(connection);
@@ -62,12 +66,15 @@ export default function HomePage() {
                 { value: priceInWei }
             );
 
-            const receipt = await tx.wait();
-            console.log(receipt);
+            notify('Purchase', 'Purchasing house ...');
+            await tx.wait();
+            update('Purchase', 'House successfully purchased!');
         } catch (err) {
-            console.log(err)
+            setIsTransacting(false);
+            toast.error(err.message.split(':')[1]);
         }
 
+        setIsTransacting(false);
         loadHouses();
     }
 
@@ -77,38 +84,53 @@ export default function HomePage() {
         );
     } else {
         return (
-            <div className='flex justify-center'>
-                <div className='px-4'>
-                    <Container>
-                        <Row xs={1} md={2}>
-                            {houses.map((h, i) => (
-                                <Col 
-                                    key={i} 
-                                    className='shadow rounded overflow-hidden mx-2' 
-                                    lg={true}
-                                >
-                                    <p className='text-center mt-3'><b>{h.address}</b></p>
-                                    <div className='text-center'>
-                                        <img src={h.imageURL} className='rounded' height='125' />
-                                    </div>
-                                    <p className='text-center mt-2'>{h.price} ETH</p>
-                                    <p align='center'>
-                                        {`${h.bedrooms} bed, ${h.bathrooms} bath, ${h.houseSqFt} sq ft home, ${h.lotSqFt} sq ft lot, built ${h.yearBuilt}`}
-                                    </p>
-                                    <div className='text-center'>
-                                        <Button
-                                            className='px-3 mx-auto mb-4'
-                                            onClick={() => { buyHouse(h) }}
-                                        >
-                                            Buy
-                                        </Button>
-                                    </div>
-                                </Col>
-                            ))}
-                        </Row>
-                    </Container>
-                </div>
-            </div>
+            <>
+                <ToastContainer position='top-right' />
+                {isTransacting ? (
+                    <div className='flex justify-center mt-10'>
+                        <div className='flex flex-col pb-12'>
+                            <h2 className='py-2 text-center'>Here's how this goes:</h2>
+                            <p className='p-4 my-4'>
+                                <b>Step 1:</b> Purchase house NFT from the seller. Confirm the transaction on your wallet.
+                            </p>
+                            <p className='p-4'>
+                                <b>Step 2:</b> Wait for the transaction to be processed.
+                            </p>
+                        </div>
+                    </div>
+                ) : (
+                    <div className='flex justify-center px-4'>
+                        <Container>
+                            <Row xs={1} md={2}>
+                                {houses.map((h, i) => (
+                                    <Col
+                                        key={i}
+                                        className='shadow rounded overflow-hidden mx-2'
+                                        lg={true}
+                                    >
+                                        <p className='text-center mt-3'><b>{h.address}</b></p>
+                                        <div className='text-center'>
+                                            <img src={h.imageURL} className='rounded' height='125' />
+                                        </div>
+                                        <p className='text-center mt-2'>{h.price} ETH</p>
+                                        <p align='center'>
+                                            {`${h.bedrooms} bed, ${h.bathrooms} bath, ${h.houseSqFt} sq ft home, ${h.lotSqFt} sq ft lot, built ${h.yearBuilt}`}
+                                        </p>
+                                        <div className='text-center'>
+                                            <Button
+                                                className='px-3 mx-auto mb-4'
+                                                onClick={() => { buyHouse(h) }}
+                                            >
+                                                Buy
+                                            </Button>
+                                        </div>
+                                    </Col>
+                                ))}
+                            </Row>
+                        </Container>
+                    </div>
+                )}
+            </>
         );
     }
 }

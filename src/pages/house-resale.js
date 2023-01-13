@@ -5,7 +5,7 @@ import Web3Modal from 'web3modal';
 import { ethers } from 'ethers';
 const Marketplace = require('../../artifacts/contracts/Market.sol/Market.json');
 import { houseNftAddress, marketAddress } from '../../config';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import { notify, update } from '../../utils/notification';
 import Transacting from '../components/Transacting';
 import { Button, Container, Form } from 'react-bootstrap';
@@ -46,7 +46,6 @@ export default function HouseResale() {
                 const priceInWei = ethers.utils.parseUnits(formInput.priceInEth, 'ether');
                 let listingFee = await marketContract.getListingFee(priceInWei);
                 listingFee = listingFee.toString();
-                notify('Market', 'Listing new NFT-in-Deed ...');
 
                 const listing = await marketContract.listHouse(
                     houseNftAddress,
@@ -55,6 +54,7 @@ export default function HouseResale() {
                     { value: listingFee }
                 );
 
+                notify('Market', 'Listing new NFT-in-Deed ...');
                 listing.wait();
                 update('Market', 'NFT-in-Deed successfully listed!');
                 setIsTransacting(false);
@@ -73,7 +73,6 @@ export default function HouseResale() {
 
     return (
         <>
-            <ToastContainer position='top-right' />
             {isTransacting ? (
                 <Transacting />
             ) : (

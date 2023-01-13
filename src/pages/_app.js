@@ -1,6 +1,7 @@
 import Head from 'next/head';
-import 'bootstrap/dist/css/bootstrap.min.css';
 import Layout from '../components/Layout.js';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import "react-toastify/dist/ReactToastify.css";
 
 export default function Dapp({ Component, pageProps }) {
     return (

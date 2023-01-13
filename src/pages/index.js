@@ -6,7 +6,7 @@ const Marketplace = require('../../artifacts/contracts/Market.sol/Market.json');
 const HouseNFT = require('../../artifacts/contracts/HouseNFT.sol/HouseNFT.json');
 import axios from 'axios';
 import { Button, Col, Container, Row } from 'react-bootstrap';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import { notify, update } from '../../utils/notification';
 
 export default function HomePage() {
@@ -85,7 +85,6 @@ export default function HomePage() {
     } else {
         return (
             <>
-                <ToastContainer position='top-right' />
                 {isTransacting ? (
                     <div className='flex justify-center mt-10'>
                         <div className='flex flex-col pb-12'>
@@ -101,11 +100,11 @@ export default function HomePage() {
                 ) : (
                     <div className='flex justify-center px-4'>
                         <Container>
-                            <Row xs={1} md={2}>
+                            <Row xs='1' lg='3' className='justify-content-md-center'>
                                 {houses.map((h, i) => (
                                     <Col
                                         key={i}
-                                        className='shadow rounded overflow-hidden mx-2'
+                                        className='shadow rounded overflow-hidden m-3'
                                         lg={true}
                                     >
                                         <p className='text-center mt-3'><b>{h.address}</b></p>

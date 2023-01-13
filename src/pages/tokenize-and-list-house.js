@@ -7,7 +7,7 @@ const Marketplace = require('../../artifacts/contracts/Market.sol/Market.json');
 const HouseNFT = require('../../artifacts/contracts/HouseNFT.sol/HouseNFT.json');
 import { houseNftAddress, marketAddress } from '../../config';
 import { Button, Col, Container, Form, Row } from 'react-bootstrap';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import { notify, update } from '../../utils/notification';
 import Transacting from '../components/Transacting';
 
@@ -92,7 +92,7 @@ export default function ListHome() {
                 const url = `https://nftindeed.infura-ipfs.io/ipfs/${added.path}`;
                 // return the URL to use it in the transaction
                 return url;
-            } catch(error) {
+            } catch (error) {
                 toast.error('Error uploading file');
             }
         }
@@ -125,7 +125,6 @@ export default function ListHome() {
             let priceInWei = ethers.utils.parseUnits(formInput.priceInEth, 'ether');
             let listingFee = await marketContract.getListingFee(priceInWei);
             listingFee = listingFee.toString();
-            notify('Market', 'Listing new NFT-in-Deed ...');
 
             const listing = await marketContract.listHouse(
                 houseNftAddress,
@@ -134,6 +133,7 @@ export default function ListHome() {
                 { value: listingFee }
             );
 
+            notify('Market', 'Listing new NFT-in-Deed ...');
             listing.wait();
             update('Market', 'NFT-in-Deed successfully listed!');
             setIsTransacting(false);
@@ -172,7 +172,6 @@ export default function ListHome() {
 
     return (
         <>
-            <ToastContainer position='top-right' />
             {isTransacting ? (
                 <Transacting />
             ) : (

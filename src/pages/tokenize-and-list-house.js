@@ -19,7 +19,7 @@ const client = ipfsHttpClient({
     host: 'ipfs.infura.io',
     port: 5001,
     protocol: 'https',
-    headers: { authorization: auth, },
+    headers: { authorization: auth },
 });
 
 export default function ListHome() {
@@ -52,6 +52,7 @@ export default function ListHome() {
             setFileUrl(url);
         } catch (err) {
             toast.error('Error uploading file');
+            console.log(err)
         }
     }
 
@@ -93,7 +94,8 @@ export default function ListHome() {
                 // return the URL to use it in the transaction
                 return url;
             } catch (error) {
-                toast.error('Error uploading file');
+                toast.error('Error uploading file. Try again');
+                router.push('/tokenize-and-list-house');
             }
         }
     }
@@ -135,9 +137,9 @@ export default function ListHome() {
 
             notify('Market', 'Listing new NFT-in-Deed ...');
             listing.wait();
-            update('Market', 'NFT-in-Deed successfully listed!');
             setIsTransacting(false);
             router.push('/');
+            update('Market', 'NFT-in-Deed successfully listed!');
         } catch (err) {
             console.log(err.message);
 

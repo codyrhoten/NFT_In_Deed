@@ -26,7 +26,7 @@ export default function HomePage() {
                 const meta = await axios.get(houseURI);
                 let price = ethers.utils.formatUnits(h.price.toString(), 'ether');
                 const house = {
-                    price: Math.trunc(price),
+                    price: (price - Math.floor(price)) !== 0 ? price : Math.trunc(price),
                     houseId: h.houseId.toNumber(),
                     address: meta.data.address,
                     imageURL: meta.data.imageURL,

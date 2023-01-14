@@ -10,7 +10,7 @@ export default function Transacting() {
                     <b>Step 2:</b> Wait for the transaction to be processed.
                 </p>
                 <p className='p-4'>
-                    <b>Step 3:</b> Allow NFT-in-Deed to sell the house. This comes with a 3% commission fee. Confirm the transaction on your wallet.
+                    <b>Step 3:</b> Allow NFT-in-Deed to sell the house. This comes with a 3% listing fee. Confirm the transaction on your wallet.
                 </p>
                 <p className='pt-1 p-4 my-4'>
                     <b>Step 4:</b> Wait for the transaction to be processed.

@@ -84,6 +84,8 @@ export default function HouseResale() {
                         <Form className='justify-content-md-center' onSubmit={listHouse}>
                             {error && <p className='text-center text-danger mt-5'>{error}</p>}
                             <Form.Control
+                                require
+                                type='number'
                                 placeholder='price in ETH'
                                 className={error ?
                                     'mt-1 border rounded mx-auto' :

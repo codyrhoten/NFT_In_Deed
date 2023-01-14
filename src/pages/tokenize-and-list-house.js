@@ -48,7 +48,7 @@ export default function ListHome() {
                 file,
                 { progress: prog => console.log(`received: ${prog}`) }
             );
-            const url = `https://nftindeed.infura-ipfs.io/ipfs/${added.path}`;
+            const url = `https://nft-in-deed.infura-ipfs.io/ipfs/${added.path}`;
             setFileUrl(url);
         } catch (err) {
             toast.error('Error uploading file');
@@ -56,9 +56,18 @@ export default function ListHome() {
         }
     }
 
+    function yearValidation(_year) {
+        let year = _year.toString();
+        
+        if (year.length === 4) {
+            return year;
+        } else {
+            return '';
+        }
+    }
+
     async function uploadToIPFS() {
         const {
-            priceInEth,
             address,
             bedrooms,
             bathrooms,
@@ -67,36 +76,28 @@ export default function ListHome() {
             yearBuilt
         } = formInput;
 
-        if (
-            !priceInEth ||
-            !address ||
-            !houseSqFt ||
-            !lotSqFt ||
-            !yearBuilt
-        ) {
-            return;
-        } else {
-            // upload metadata to IPFS
-            const data = JSON.stringify({
-                address,
-                imageURL: fileUrl,
-                bedrooms,
-                bathrooms,
-                houseSqFt,
-                lotSqFt,
-                yearBuilt
-            });
+        // upload metadata to IPFS
+        const data = JSON.stringify({
+            address,
+            imageURL: fileUrl,
+            bedrooms,
+            bathrooms,
+            houseSqFt,
+            lotSqFt,
+            yearBuilt: yearValidation(yearBuilt)
+        });
 
-            try {
-                const added = await client.add(data);
-                console.log('added: ', added);
-                const url = `https://nftindeed.infura-ipfs.io/ipfs/${added.path}`;
-                // return the URL to use it in the transaction
-                return url;
-            } catch (error) {
-                toast.error('Error uploading file. Try again');
-                router.push('/tokenize-and-list-house');
-            }
+        console.log(data)
+
+        try {
+            const added = await client.add(data);
+            console.log('added: ', added);
+            const url = `https://nft-in-deed.infura-ipfs.io/ipfs/${added.path}`;
+            // return the URL to use it in the transaction
+            return url;
+        } catch (error) {
+            toast.error('Error uploading file. Try again');
+            setIsTransacting(false);
         }
     }
 
@@ -111,14 +112,16 @@ export default function ListHome() {
 
         try {
             setIsTransacting(true);
-            // Mint a house
             const houseNFTContract = new ethers.Contract(houseNftAddress, HouseNFT.abi, signer);
             const marketContract = new ethers.Contract(marketAddress, Marketplace.abi, signer);
-
+            
+            // Mint a house
             let mintedHouse = await houseNFTContract.mint(url);
-            notify('NFT-in-Deed', 'House tokenization happening now ...')
+            notify('NFT-in-Deed', 'House tokenization happening now ...');
+
             let mintTx = await mintedHouse.wait();
             update('NFT-in-Deed', 'House successfully tokenized!');
+
             let mintEvent = mintTx.events[0];
             let mintedHouseId = mintEvent.args[2];
             console.log('minted house ', mintedHouseId);
@@ -142,12 +145,8 @@ export default function ListHome() {
             update('Market', 'NFT-in-Deed successfully listed!');
         } catch (err) {
             console.log(err.message);
-
-            if (err.message.includes('user rejected transaction')) {
-                setError('The transaction was rejected. Try again?');
-            }
-
-            toast.error(err.message.split(':')[1]);
+            setIsTransacting(false);
+            setError('Transaction was rejected. Try again?');
         }
     }
 
@@ -184,6 +183,8 @@ export default function ListHome() {
                             {error && <p className='text-center text-danger mt-5'>{error}</p>}
                             <Col className={error ? 'mt-1' : 'mt-5'}>
                                 <Form.Control
+                                    required
+                                    type='string'
                                     placeholder='street, apt/suite/floor, city, state, zip'
                                     className='border rounded p-2'
                                     value={formInput.address ? formInput.address : ''}
@@ -195,6 +196,8 @@ export default function ListHome() {
                             </Col>
                             <Col sm={2} className='mt-4'>
                                 <Form.Control
+                                    required
+                                    type='number'
                                     placeholder='price in ETH'
                                     className='border rounded'
                                     value={formInput.priceInEth ? formInput.priceInEth : ''}
@@ -205,6 +208,7 @@ export default function ListHome() {
                                 />
                             </Col>
                             <Form.Control
+                                required
                                 type="file"
                                 name="House"
                                 className="mt-4"
@@ -247,6 +251,8 @@ export default function ListHome() {
                                     <Form.Group>
                                         <Form.Label>Interior Sq Ft</Form.Label>
                                         <Form.Control
+                                            required
+                                            type='number'
                                             placeholder='1,250'
                                             value={formInput.houseSqFt ? formInput.houseSqFt : ''}
                                             onChange={e => updateFormInput({
@@ -260,6 +266,8 @@ export default function ListHome() {
                                     <Form.Group>
                                         <Form.Label>Lot Sq Ft</Form.Label>
                                         <Form.Control
+                                            required
+                                            type='number'
                                             placeholder='10,000'
                                             value={formInput.lotSqFt ? formInput.lotSqFt : ''}
                                             onChange={e => updateFormInput({
@@ -273,6 +281,8 @@ export default function ListHome() {
                                     <Form.Group>
                                         <Form.Label>Year built</Form.Label>
                                         <Form.Control
+                                            required
+                                            type='number'
                                             placeholder='YYYY'
                                             value={formInput.yearBuilt ? formInput.yearBuilt : ''}
                                             onChange={e => updateFormInput({

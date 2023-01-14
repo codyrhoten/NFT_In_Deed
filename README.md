@@ -2,7 +2,7 @@
 
 <a href="https://nft-in-deed.vercel.app//">View NFT-in-Deed Market</a>
 
-<img src="/public/home-pg.png" alt="home page">
+<img src="/src/public/home-pg.png" alt="home page">
 
 ## About
 

@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import { useRouter } from "next/router";
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/router';
 import axios from 'axios';
 import Web3Modal from 'web3modal';
 import { ethers } from 'ethers';
@@ -56,6 +56,7 @@ export default function HouseResale() {
 
                 notify('Market', 'Listing new NFT-in-Deed ...');
                 listing.wait();
+
                 update('Market', 'NFT-in-Deed successfully listed!');
                 setIsTransacting(false);
                 router.push('/');
@@ -67,6 +68,7 @@ export default function HouseResale() {
                 }
 
                 toast.error(err.message.split(':')[1]);
+                setIsTransacting(false);
             }
         }
     }

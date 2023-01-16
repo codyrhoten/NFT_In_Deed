@@ -1,4 +1,5 @@
 import { Navbar, Nav, Container } from 'react-bootstrap'
+import Link from 'next/link';
 import ConnectButton from './ConnectButton';
 
 export default function Header({ metamaskInstalled, walletButtonPressed, walletAddress }) {
@@ -8,17 +9,17 @@ export default function Header({ metamaskInstalled, walletButtonPressed, walletA
                 <Navbar.Brand href='/'><b>NFT-in-Deed</b></Navbar.Brand>
                 <Navbar.Collapse id='navbarSupportedContent'>
                     <Nav className='ms-auto'>
-                        <Nav.Item><Nav.Link href='/tokenize-and-list-house'>
+                        <Nav.Item><Link href='/tokenize-and-list-house'>
                             Tokenize & list a home
-                        </Nav.Link></Nav.Item>
+                        </Link></Nav.Item>
                         <div className="vr" />
-                        <Nav.Item><Nav.Link href='/my-houses'>
+                        <Nav.Item><Link href='/my-houses'>
                             My houses
-                        </Nav.Link></Nav.Item>
+                        </Link></Nav.Item>
                         <div className="vr" />
-                        <Nav.Item><Nav.Link href='/my-listed-houses'>
+                        <Nav.Item><Link href='/my-listed-houses'>
                             My listed houses
-                        </Nav.Link></Nav.Item>
+                        </Link></Nav.Item>
                     </Nav>
                 </Navbar.Collapse>
                 <div className='mx-2'>

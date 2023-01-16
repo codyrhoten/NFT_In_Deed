@@ -15,7 +15,7 @@ export default function Layout({ children }) {
         if (ethereum) {
             setMetamaskInstalled(true);
 
-            ethereum.on('accountsChanged', accounts => {
+            ethereum.on('accountsChanged', async accounts => {
                 if (accounts.length > 0) {
                     setWallet(accounts[0]);
                     window.location.reload();
@@ -34,16 +34,14 @@ export default function Layout({ children }) {
         }
     }
 
-    useEffect(() => {
-        async function getWallet() {
-            const { address, status } = getWalletConnected();
-            setWallet(address);
-            notify('Wallet', status);
-            walletListener();
-        }
+    async function getWallet() {
+        const { address, status } = getWalletConnected();
+        setWallet(address);
+        notify('Wallet', status);
+        walletListener();
+    }
 
-        getWallet();
-    }, []);
+    useEffect(() => { getWallet() }, []);
 
     async function walletButtonPressed() {
         const walletResponse = await getWalletConnected();

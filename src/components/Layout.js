@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { ToastContainer } from 'react-toastify';
 import { notify } from '../../utils/notification';
 import getWalletConnected from "../../utils/wallet";
-import Header from "./Header";
+import Header from "./Header/Header";
 import WalletStatus from "./WalletStatus";
 import { Container } from "react-bootstrap";
 

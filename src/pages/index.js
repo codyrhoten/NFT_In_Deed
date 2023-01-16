@@ -99,7 +99,7 @@ export default function HomePage() {
     if (loadingState === "loaded" && houses.length === 0) {
         return (
             <h4 className="mt-5 text-center">
-                Be the first to list an NFT in-deed! &#127968;
+                Be the first to list an NFT-in-deed! &#127968;
             </h4>
         );
     } else {

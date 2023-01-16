@@ -5,11 +5,17 @@ import ConnectButton from './ConnectButton';
 export default function Header({ metamaskInstalled, walletButtonPressed, walletAddress }) {
     return (
         <Navbar className='border p-6 rounded mb-4'>
-            <Container className='flex mt-4'>
-                <Navbar.Brand href='/'><b>NFT-in-Deed</b></Navbar.Brand>
+            <Container className='flex mt-3'>
+                <Navbar.Brand><Link href='/'><b>NFT-in-Deed</b></Link></Navbar.Brand>
                 <Navbar.Collapse id='navbarSupportedContent'>
                     <Nav className='ms-auto'>
-                        <Nav.Item><Link href='/tokenize-and-list-house'>
+                        <Nav.Item><Link styles={{
+                            display: 'block',
+                            padding: '0.5rem 1rem',
+                            color: '#0d6efd',
+                            textDecoration: 'none',
+                            transition: 'color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out'
+                        }} href='/tokenize-and-list-house'>
                             Tokenize & list a home
                         </Link></Nav.Item>
                         <div className="vr" />

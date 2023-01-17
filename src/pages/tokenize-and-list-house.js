@@ -141,9 +141,9 @@ export default function ListHome() {
             notify('Market', 'Listing new NFT-in-Deed ...');
             listing.wait();
 
+            update('Market', 'NFT-in-Deed successfully listed!');
             setIsTransacting(false);
             router.push("/");
-            update('Market', 'NFT-in-Deed successfully listed!');
         } catch (err) {
             console.log(err.message);
             setFileUrl(null);

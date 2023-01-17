@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, cloneElement } from "react";
 import { ToastContainer } from 'react-toastify';
 import { notify } from '../../utils/notification';
 import getWalletConnected from "../../utils/wallet";

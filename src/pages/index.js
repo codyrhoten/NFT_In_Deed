@@ -13,6 +13,8 @@ export default function HomePage() {
     const [houses, setHouses] = useState([]);
     const [loadingState, setLoadingState] = useState("not-loaded");
     const [isTransacting, setIsTransacting] = useState(false);
+    const [isConnected, setIsConnected] = useState(false);
+    const [walletAddress, setWallet] = useState(false);
 
     async function loadHouses() {
         const provider = new ethers.providers.Web3Provider(ethereum);
@@ -41,6 +43,7 @@ export default function HomePage() {
                     const house = {
                         price: price - Math.floor(price) !== 0 ? price : Math.trunc(price),
                         houseId: h.houseId.toNumber(),
+                        seller: h.seller,
                         address: meta.data.address,
                         imageURL: meta.data.imageURL,
                         bedrooms: meta.data.bedrooms,
@@ -61,11 +64,51 @@ export default function HomePage() {
         setLoadingState("loaded");
     }
 
+    async function walletListener() {
+        try {
+            const accounts = await ethereum.request({ method: 'eth_accounts' });
+
+            if (accounts.length > 0) {
+                setIsConnected(true);
+                setWallet(accounts[0]);
+            }
+
+            ethereum.on('accountsChanged', async accounts => {
+                if (accounts.length > 0) {
+                    setWallet(accounts[0]);
+                    setIsConnected(true);
+                } else {
+                    setIsConnected(false);
+                    notify('Wallet', 'Connect to MetaMask using the \'Connect wallet\' button.');
+                }
+            });
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
     useEffect(() => {
         loadHouses();
+        walletListener();
     }, []);
 
+    function houseOwner(id) {
+        let _houses = houses.filter(h => {
+            Number(h.houseId) === Number(id) && h.seller.toLowerCase() === walletAddress;
+        });
+
+        console.log(_houses.length)
+        return _houses.length;
+    }
+
     async function buyHouse(house) {
+        const isOwner = houseOwner(house.houseId);
+
+        if (isOwner) {
+            toast.error('You may not buy a house that you tokenized');
+            return;
+        }
+
         setIsTransacting(true);
         const web3Modal = new Web3Modal();
         const connection = await web3Modal.connect();
@@ -140,6 +183,7 @@ export default function HomePage() {
                                         </p>
                                         <div className="text-center">
                                             <Button
+                                                style={{ display: isConnected ? 'block' : 'none' }}
                                                 className="px-3 mx-auto mb-4"
                                                 onClick={() => {
                                                     buyHouse(h);

@@ -14,11 +14,15 @@ Created an application that interacts with smart contracts which maintain house 
 *npm run dev*
 
 **For Goerli network:**
+
 connect wallet on Goerli network
 
 **For Hardhat Network running locally:**
+
 *npx hardhat node*
+
 *npx hardhat run --network localhost scripts/deploy.js*
+
 connect wallet on localhost:8545 network
 
 ### Languages

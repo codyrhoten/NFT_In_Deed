@@ -1,25 +1,25 @@
-import { useState } from "react";
-import { useRouter } from "next/router";
-import { create as ipfsHttpClient } from "ipfs-http-client";
-import Web3Modal from "web3modal";
-import { ethers } from "ethers";
-const Marketplace = require("../../artifacts/contracts/Market.sol/Market.json");
-const HouseNFT = require("../../artifacts/contracts/HouseNFT.sol/HouseNFT.json");
-import { houseNftAddress, marketAddress } from "../../config";
-import { Button, Col, Container, Form, Row } from "react-bootstrap";
-import { toast } from "react-toastify";
-import { notify, update } from "../../utils/notification";
-import Transacting from "../components/Transacting";
+import { useState } from 'react';
+import { useRouter } from 'next/router';
+import { create as ipfsHttpClient } from 'ipfs-http-client';
+import Web3Modal from 'web3modal';
+import { ethers } from 'ethers';
+const Marketplace = require('../../artifacts/contracts/Market.sol/Market.json');
+const HouseNFT = require('../../artifacts/contracts/HouseNFT.sol/HouseNFT.json');
+import { houseNftAddress, marketAddress } from '../../config';
+import { Button, Col, Container, Form, Row } from 'react-bootstrap';
+import { toast } from 'react-toastify';
+import { notify, update } from '../../utils/notification';
+import Transacting from '../components/Transacting';
 
 const projectSecret = process.env.NEXT_PUBLIC_IPFS_KEY_SECRET;
 const projectId = process.env.NEXT_PUBLIC_IPFS_PROJECT_ID;
 const auth =
-    "Basic " + Buffer.from(projectId + ":" + projectSecret).toString("base64");
+    'Basic ' + Buffer.from(projectId + ':' + projectSecret).toString('base64');
 
 const client = ipfsHttpClient({
-    host: "ipfs.infura.io",
+    host: 'ipfs.infura.io',
     port: 5001,
-    protocol: "https",
+    protocol: 'https',
     headers: { authorization: auth },
 });
 
@@ -28,14 +28,14 @@ export default function ListHome() {
     const [isTransacting, setIsTransacting] = useState(false);
     const [error, setError] = useState("");
     const [formInput, updateFormInput] = useState({
-        priceInEth: "",
-        address: "",
-        imageURL: "",
-        bedrooms: "",
-        bathrooms: "",
-        houseSqFt: "",
-        lotSqFt: "",
-        yearBuilt: "",
+        priceInEth: '',
+        address: '',
+        imageURL: '',
+        bedrooms: '',
+        bathrooms: '',
+        houseSqFt: '',
+        lotSqFt: '',
+        yearBuilt: '',
     });
 
     const router = useRouter();
@@ -93,17 +93,8 @@ export default function ListHome() {
         const url = await uploadToIPFS();
         const signer = provider.getSigner();
         const userBalance =  signer.getBalance().toString();
-        
-        const houseNFTContract = new ethers.Contract(
-            houseNftAddress,
-            HouseNFT.abi,
-            signer
-        );
-        const marketContract = new ethers.Contract(
-            marketAddress,
-            Marketplace.abi,
-            signer
-        );
+        const houseNFTContract = new ethers.Contract(houseNftAddress, HouseNFT.abi, signer);
+        const marketContract = new ethers.Contract(marketAddress, Marketplace.abi, signer);
 
         // list the house
         let priceInWei = ethers.utils.parseUnits(formInput.priceInEth, "ether");

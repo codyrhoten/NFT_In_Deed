@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import axios from 'axios';
 import Web3Modal from 'web3modal';
 import { ethers } from 'ethers';
+const HouseNFT = require('../../artifacts/contracts/HouseNFT.sol/HouseNFT.json');
 const Marketplace = require('../../artifacts/contracts/Market.sol/Market.json');
 import { houseNftAddress, marketAddress } from '../../config';
 import { toast } from 'react-toastify';
@@ -39,11 +40,21 @@ export default function HouseResale() {
             const connection = await web3Modal.connect();
             const provider = new ethers.providers.Web3Provider(connection);
             const signer = provider.getSigner();
+            const houseNFTContract = new ethers.Contract(houseNftAddress, HouseNFT.abi, signer);
+            const marketContract = new ethers.Contract(marketAddress, Marketplace.abi, signer);
+            const priceInWei = ethers.utils.parseUnits(formInput.priceInEth, 'ether');
 
             try {
                 setIsTransacting(true);
-                const marketContract = new ethers.Contract(marketAddress, Marketplace.abi, signer);
-                const priceInWei = ethers.utils.parseUnits(formInput.priceInEth, 'ether');
+
+                const userApproval = await houseNFTContract.setApprovalForAll(
+                    marketAddress, 
+                    true
+                );
+                notify('Approval', 'Setting approval for Market give your NFT to you');
+                userApproval.wait();
+                update('Approval', 'Approval successful!');
+
                 let listingFee = await marketContract.getListingFee(priceInWei);
                 listingFee = listingFee.toString();
 
@@ -56,8 +67,8 @@ export default function HouseResale() {
 
                 notify('Market', 'Listing new NFT-in-Deed ...');
                 listing.wait();
-
                 update('Market', 'NFT-in-Deed successfully listed!');
+
                 setIsTransacting(false);
                 router.push('/');
             } catch (err) {

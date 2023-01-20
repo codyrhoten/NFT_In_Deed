@@ -46,13 +46,13 @@
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/codyrhoten/Fundraiser-DApp.git"
+        "url": "git+https://github.com/codyrhoten/NFT_In_Deed.git"
     },
     "keywords": [],
     "author": "",
     "license": "ISC",
     "bugs": {
-        "url": "https://github.com/codyrhoten/Fundraiser-DApp/issues"
+        "url": "https://github.com/codyrhoten/NFT_In_Deed/issues"
     },
-    "homepage": "https://github.com/codyrhoten/Fundraiser-DApp#readme"
+    "homepage": "https://github.com/codyrhoten/NFT_In_Deed#readme"
 }

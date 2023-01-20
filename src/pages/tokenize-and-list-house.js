@@ -26,7 +26,8 @@ const client = ipfsHttpClient({
 export default function ListHome() {
     const [fileUrl, setFileUrl] = useState(null);
     const [isTransacting, setIsTransacting] = useState(false);
-    const [error, setError] = useState("");
+    // const [isLoading, setLoadingState] = useState(false);
+    // const [error, setError] = useState("");
     const [formInput, updateFormInput] = useState({
         priceInEth: '',
         address: '',
@@ -113,9 +114,11 @@ export default function ListHome() {
 
             // Mint a house
             let mintedHouse = await houseNFTContract.mint(url);
+            // setLoadingState(true);
             notify("NFT-in-Deed", "House tokenization happening now ...");
 
             let mintTx = await mintedHouse.wait();
+            // setLoadingState(false);
             update("NFT-in-Deed", "House successfully tokenized!");
 
             let mintEvent = mintTx.events[0];
@@ -129,9 +132,11 @@ export default function ListHome() {
                 { value: listingFee }
             );
 
+            // setLoadingState(true);
             notify('Market', 'Listing new NFT-in-Deed ...');
             listing.wait();
 
+            // setLoadingState(false);
             update('Market', 'NFT-in-Deed successfully listed!');
             setIsTransacting(false);
             router.push("/");
@@ -187,7 +192,7 @@ export default function ListHome() {
     return (
         <>
             {isTransacting ? (
-                <Transacting />
+                <Transacting /* isLoading={isLoading} */ />
             ) : (
                 <Container className="flex justify-center">
                     <div className="flex flex-col pb-12">
@@ -245,6 +250,7 @@ export default function ListHome() {
                                     <Form.Group>
                                         <Form.Label>Bedrooms</Form.Label>
                                         <Form.Select
+                                            defaultValue='1'
                                             onChange={(e) =>
                                                 updateFormInput({
                                                     ...formInput,
@@ -260,6 +266,7 @@ export default function ListHome() {
                                     <Form.Group>
                                         <Form.Label>Bathrooms</Form.Label>
                                         <Form.Select
+                                            defaultValue='1'
                                             onChange={(e) =>
                                                 updateFormInput({
                                                     ...formInput,

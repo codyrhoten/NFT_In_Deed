@@ -26,7 +26,7 @@ export default function MyListedHouses() {
                 const meta = await axios.get(houseURI);
                 let price = ethers.utils.formatUnits(h.price.toString(), 'ether');
                 const house = {
-                    price: Math.trunc(price),
+                    price: price - Math.floor(price) !== 0 ? price : Math.trunc(price),
                     houseId: h.houseId.toNumber(),
                     address: meta.data.address,
                     imageURL: meta.data.imageURL,
@@ -49,17 +49,17 @@ export default function MyListedHouses() {
 
     useEffect(() => { loadMyListedHouses() }, []);
 
-    if (loadingState === 'loaded' && houses.length === 0) {
+    if (houses.length === 0) {
         return (
             <h4 className='mt-5 text-center'>This wallet doesn't contain listed NFTs-in-Deed</h4>
         );
     } else {
         return (
-            <div className='flex justify-center'>
+            <div className='mb-4 flex justify-center'>
                 <div className='px-4'>
                     <Container>
                         <h4 className='my-4 text-center'>My NFTs-in-Deed on the market</h4>
-                        <Row xs={1} md={2}>
+                        <Row xs='1' lg='3' className='justify-content-md-center'>
                             {houses.map((h, i) => (
                                 <Col key={i} className='shadow rounded overflow-hidden mx-2' lg={true}>
                                     <p className='text-center mt-3'><b>{h.address}</b></p>

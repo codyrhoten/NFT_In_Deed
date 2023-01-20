@@ -1,17 +1,18 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect } from 'react';
 import axios from 'axios';
-import Web3Modal from "web3modal";
-import { ethers } from "ethers";
-import { houseNftAddress, marketAddress } from "../../config";
-const Marketplace = require("../../artifacts/contracts/Market.sol/Market.json");
-const HouseNFT = require("../../artifacts/contracts/HouseNFT.sol/HouseNFT.json");
-import { Button, Col, Container, Row } from "react-bootstrap";
-import { toast } from "react-toastify";
-import { notify, update } from "../../utils/notification";
+import Web3Modal from 'web3modal';
+import { ethers } from 'ethers';
+import { houseNftAddress, marketAddress } from '../../config';
+const Marketplace = require('../../artifacts/contracts/Market.sol/Market.json');
+const HouseNFT = require('../../artifacts/contracts/HouseNFT.sol/HouseNFT.json');
+import { Button, Col, Container, Row } from 'react-bootstrap';
+import { toast } from 'react-toastify';
+// import Image from 'next/image';
+import { notify, update } from '../../utils/notification';
 
 export default function HomePage() {
     const [houses, setHouses] = useState([]);
-    const [loadingState, setLoadingState] = useState("not-loaded");
+    // const [isLoading, setLoadingState] = useState(false);
     const [isTransacting, setIsTransacting] = useState(false);
     const [isConnected, setIsConnected] = useState(false);
     const [walletAddress, setWallet] = useState(false);
@@ -34,11 +35,7 @@ export default function HomePage() {
             _houses.map(async (h) => {
                 try {
                     let houseURI = await houseNFTContract.tokenURI(h.houseId);
-                    // houseURI = `https://${houseURI.split("nftindeed.infura-")[1]}`;
                     const meta = await axios.get(houseURI);
-                    // const meta = await fetch(houseURI);
-                    // const metaJSON = await meta.json();
-                    // const newImageURI = `https://${metaJSON.imageURL.split("nftindeed.infura-")[1]}`;
                     let price = ethers.utils.formatUnits(h.price.toString(), "ether");
                     const house = {
                         price: price - Math.floor(price) !== 0 ? price : Math.trunc(price),
@@ -61,7 +58,6 @@ export default function HomePage() {
         );
 
         setHouses(_houses.filter((house) => house !== null));
-        setLoadingState("loaded");
     }
 
     async function walletListener() {
@@ -114,7 +110,7 @@ export default function HomePage() {
         const connection = await web3Modal.connect();
         const provider = new ethers.providers.Web3Provider(connection);
         const signer = provider.getSigner();
-        const priceInWei = ethers.utils.parseUnits(house.price.toString(), "ether");
+        const priceInWei = ethers.utils.parseUnits(house.price.toString(), 'ether');
 
         try {
             const marketContract = new ethers.Contract(
@@ -127,21 +123,37 @@ export default function HomePage() {
                 value: priceInWei,
             });
 
-            notify("Purchase", "Purchasing house ...");
+            setLoadingState(true);
+            notify('Purchase', 'Purchasing house ...');
             await tx.wait();
-            update("Purchase", "House successfully purchased!");
+
+            setLoadingState(false);
+            update('Purchase', 'House successfully purchased!');
         } catch (err) {
+            console.log(err.message);
+            let errorMessage = '';
+
+            if (err.message.includes('insufficient funds')) {
+                errorMessage =
+                    'Insufficient funds to cover the listing fee. Add more funds to your wallet to try again.';
+            }
+
+            if (err.message.includes("user rejected")) {
+                errorMessage =
+                    "Transaction was rejected by the user. Try again?";
+            }
+
+            toast.error(errorMessage);
             setIsTransacting(false);
-            toast.error(err.message.split(":")[1]);
         }
 
         setIsTransacting(false);
         loadHouses();
     }
 
-    if (loadingState === "loaded" && houses.length === 0) {
+    if (houses.length === 0) {
         return (
-            <h4 className="mt-5 text-center">
+            <h4 className='mt-5 text-center'>
                 Be the first to list an NFT-in-deed! &#127968;
             </h4>
         );
@@ -149,42 +161,52 @@ export default function HomePage() {
         return (
             <>
                 {isTransacting ? (
-                    <div className="flex justify-center mt-10">
-                        <div className="flex flex-col pb-12">
-                            <h2 className="py-2 text-center">Here's how this goes:</h2>
-                            <p className="p-4 my-4">
+                    <div className='flex justify-center mt-10'>
+                        <div className='flex flex-col pb-12'>
+                            <h2 className='py-2 text-center'>Here's how this goes:</h2>
+                            <p className='p-4 my-3'>
                                 <b>Step 1:</b> Purchase house NFT from the seller. Confirm the
                                 transaction on your wallet.
                             </p>
-                            <p className="p-4">
-                                <b>Step 2:</b> Wait for the transaction to be processed.
+                            <p className='p-4 my-3'>
+                                <b>Step 2:</b> Wait a few seconds for the transaction to be processed.
                             </p>
+                            {/* {isLoading && (
+                                <div className='flex justify-center'>
+                                    <Image
+                                        src={'/loading-spinner.gif'}
+                                        alt='loading spinner'
+                                        width='175'
+                                        height='175'
+                                    />
+                                </div>
+                            )} */}
                         </div>
                     </div>
                 ) : (
-                    <div className="flex justify-center px-4">
+                    <div className='mb-4 flex justify-center px-4'>
                         <Container>
-                            <Row xs="1" lg="3" className="justify-content-md-center">
+                            <Row xs='1' lg='3' className='justify-content-md-center'>
                                 {houses.map((h, i) => (
                                     <Col
                                         key={i}
-                                        className="shadow rounded overflow-hidden m-3"
+                                        className='shadow rounded overflow-hidden m-3'
                                         lg={true}
                                     >
-                                        <p className="text-center mt-3">
+                                        <p className='text-center mt-3'>
                                             <b>{h.address}</b>
                                         </p>
-                                        <div className="text-center">
-                                            <img src={h.imageURL} className="rounded" height="125" />
+                                        <div className='text-center'>
+                                            <img src={h.imageURL} className='rounded' height='125' />
                                         </div>
-                                        <p className="text-center mt-2">{h.price} ETH</p>
-                                        <p align="center">
+                                        <p className='text-center mt-2'>{h.price} ETH</p>
+                                        <p align='center'>
                                             {`${h.bedrooms} bed, ${h.bathrooms} bath, ${h.houseSqFt} sq ft home, ${h.lotSqFt} sq ft lot, built ${h.yearBuilt}`}
                                         </p>
-                                        <div className="text-center">
+                                        <div className='text-center'>
                                             <Button
                                                 style={{ display: isConnected ? 'block' : 'none' }}
-                                                className="px-3 mx-auto mb-4"
+                                                className='px-3 mx-auto mb-4'
                                                 onClick={() => {
                                                     buyHouse(h);
                                                 }}

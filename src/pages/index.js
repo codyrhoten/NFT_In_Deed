@@ -86,7 +86,7 @@ export default function HomePage() {
     useEffect(() => {
         loadHouses();
         walletListener();
-    }, []);
+    }, [houses]);
 
     function houseOwner(id) {
         let _houses = houses.filter(h => {

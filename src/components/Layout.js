@@ -4,7 +4,7 @@ import { notify } from '../../utils/notification';
 import getWalletConnected from "../../utils/wallet";
 import Header from "./Header/Header";
 import WalletStatus from "./WalletStatus";
-import { Container } from "react-bootstrap";
+import { Button, Container } from "react-bootstrap";
 
 export default function Layout({ children }) {
     const [walletAddress, setWallet] = useState('');
@@ -12,7 +12,7 @@ export default function Layout({ children }) {
     const [metamaskInstalled, setMetamaskInstalled] = useState(false);
 
     function walletListener() {
-        if (ethereum) {
+        if (window.ethereum) {
             setMetamaskInstalled(true);
 
             ethereum.on('accountsChanged', async accounts => {
@@ -25,12 +25,17 @@ export default function Layout({ children }) {
                 }
             });
         } else {
-            notify('Wallet', (
+            setStatus(
                 <p>
-                    {' '}You must install Metamask, an Ethereum wallet, in your browser.{' '}
-                    <Button href='https://metamask.io/download.html' className='my-4 rounded px-3 py-2 shadow-lg'>Download</Button>
+                    {' '}You must install an Ethereum wallet called MetaMask in your browser.{' '}
+                    <Button 
+                        className='mx-3 rounded px-3 py-2 shadow-lg'
+                        onClick={() => window.open('https://metamask.io/download.html', '_blank')}
+                    >
+                        Download
+                    </Button>
                 </p>
-            ));
+            );
         }
     }
 
@@ -51,14 +56,13 @@ export default function Layout({ children }) {
 
     return (
         <Container>
-            <Header 
+            <Header
                 metamaskInstalled={metamaskInstalled}
                 getWalletConnected={getWalletConnected}
                 walletAddress={walletAddress}
                 walletButtonPressed={walletButtonPressed}
             />
-            <WalletStatus status={status} />
-            {children}
+            {!metamaskInstalled ? <WalletStatus status={status} /> : children}
             <ToastContainer />
         </Container>
     );

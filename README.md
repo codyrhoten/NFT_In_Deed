@@ -54,9 +54,9 @@ Hardhat is a professional environment for Ethereum development.
 
 <img src="/src/public/contracts-test-coverage.png" alt="Coverage" >
 
-### Off-Chain Storage
+### Storage
 
-[IPFS](https://ipfs.io/), or InterPlanetary Filing System, is a network for storing and sharing data in a peer-to-peer distributed file system.
+[IPFS](https://ipfs.io/), or InterPlanetary Filing System, is a network for storing and sharing data in a peer-to-peer distributed file system. This storage is off-chain.
 
 ### Languages
 

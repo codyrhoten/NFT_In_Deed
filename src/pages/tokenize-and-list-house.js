@@ -27,7 +27,6 @@ export default function ListHome() {
     const [fileUrl, setFileUrl] = useState(null);
     const [isTransacting, setIsTransacting] = useState(false);
     // const [isLoading, setLoadingState] = useState(false);
-    // const [error, setError] = useState("");
     const [formInput, updateFormInput] = useState({
         priceInEth: '',
         address: '',
@@ -202,8 +201,7 @@ export default function ListHome() {
                             className="justify-content-md-center"
                             onSubmit={tokenizeAndListHouse}
                         >
-                            {error && <p className="text-center text-danger mt-5">{error}</p>}
-                            <Col className={error ? "mt-1" : "mt-5"}>
+                            <Col>
                                 <Form.Control
                                     required
                                     type="string"

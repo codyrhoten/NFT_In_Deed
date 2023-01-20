@@ -1,5 +1,7 @@
+import { Button } from 'react-bootstrap';
+
 export default async function getWalletConnected() {
-    if (ethereum) {
+    if (window.ethereum) {
         try {
             const addresses = await ethereum.request({ method: "eth_requestAccounts" });
 
@@ -21,8 +23,8 @@ export default async function getWalletConnected() {
                 <p>
                     {" "}You must install an Ethereum wallet called MetaMask in your browser.{" "}
                     <Button 
-                        href='https://metamask.io/download.html' 
-                        className='my-4 rounded px-3 py-2 shadow-lg'
+                        className='mx-3 rounded px-3 py-2 shadow-lg'
+                        onClick={() => window.open('https://metamask.io/download.html', '_blank')}
                     >
                         Download
                     </Button>

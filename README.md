@@ -9,7 +9,7 @@
 
 Created an application that interacts with smart contracts which maintain house deeds tokenized as NFTs. The app serves as a market place to list and buy these NFT deeds (and all the property rights that go along with that in a world where legally tokenized deeds are commonplace). It is currently available to play with on the Goerli testnet.
 
-### Back End
+### *Back End*
 
 #### Smart Contracts
 
@@ -24,7 +24,7 @@ Created an application that interacts with smart contracts which maintain house 
 
 - Re-entrancy attacks are handled through Open Zeppelin's [nonReentrant library](https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/security/ReentrancyGuard.sol)
 
-### Front End
+### *Front End*
 
 #### Status
 
@@ -46,7 +46,7 @@ Created an application that interacts with smart contracts which maintain house 
     - transaction is being validated on the Goerli network
     - transaction has succeeded
 
-### Unit Testing
+### *Unit Testing*
 
 Hardhat is a professional environment for Ethereum development.
 
@@ -54,7 +54,7 @@ Hardhat is a professional environment for Ethereum development.
 
 <img src="/src/public/contracts-test-coverage.png" alt="Coverage" >
 
-### Storage
+### *Storage*
 
 [IPFS](https://ipfs.io/), or InterPlanetary Filing System, is a network for storing and sharing data in a peer-to-peer distributed file system. This storage is off-chain.
 

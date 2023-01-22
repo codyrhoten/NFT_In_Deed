@@ -8,7 +8,6 @@ const Marketplace = require('../../artifacts/contracts/Market.sol/Market.json');
 import { houseNftAddress, marketAddress } from '../../config';
 import { toast } from 'react-toastify';
 import { notify, update } from '../../utils/notification';
-import Transacting from '../components/Transacting';
 import { Button, Container, Form } from 'react-bootstrap';
 
 export default function HouseResale() {

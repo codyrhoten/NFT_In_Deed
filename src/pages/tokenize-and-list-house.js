@@ -248,11 +248,10 @@ export default function ListHome() {
                                     <Form.Group>
                                         <Form.Label>Bedrooms</Form.Label>
                                         <Form.Select
-                                            defaultValue='1'
                                             onChange={(e) =>
                                                 updateFormInput({
                                                     ...formInput,
-                                                    bedrooms: e.target.value,
+                                                    bedrooms: e.target.value || '1',
                                                 })
                                             }
                                         >
@@ -264,11 +263,10 @@ export default function ListHome() {
                                     <Form.Group>
                                         <Form.Label>Bathrooms</Form.Label>
                                         <Form.Select
-                                            defaultValue='1'
                                             onChange={(e) =>
                                                 updateFormInput({
                                                     ...formInput,
-                                                    bathrooms: e.target.value,
+                                                    bathrooms: e.target.value || '1',
                                                 })
                                             }
                                         >

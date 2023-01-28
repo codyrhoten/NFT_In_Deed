@@ -20,15 +20,20 @@ export default async function getWalletConnected() {
         return {
             address: '',
             status: (
-                <p>
-                    {" "}You must install an Ethereum wallet called MetaMask in your browser.{" "}
-                    <Button 
-                        className='mx-3 rounded px-3 py-2 shadow-lg'
-                        onClick={() => window.open('https://metamask.io/download.html', '_blank')}
-                    >
-                        Download
-                    </Button>
-                </p>
+                <>
+                    <p>
+                        {" "}You must install an Ethereum wallet called MetaMask in your browser.{" "}
+                        <Button
+                            className='mx-3 rounded px-3 py-2 shadow-lg'
+                            onClick={
+                                () => window.open('https://metamask.io/download.html', '_blank')
+                            }
+                        >
+                            Download
+                        </Button>
+                    </p>
+                    <p><i>Then, select the Goerli test network, NOT the main Ethereum network</i></p>
+                </>
             )
         }
     }

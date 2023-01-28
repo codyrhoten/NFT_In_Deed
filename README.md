@@ -7,7 +7,7 @@
 
 ## About
 
-Created an application that interacts with smart contracts which maintain house deeds tokenized as NFTs. The app serves as a market place to list and buy these NFT deeds (and all the property rights that go along with that in a world where legally tokenized deeds are commonplace). It is currently available to play with on the Goerli testnet.
+Created an application that interacts with smart contracts which maintain house deeds tokenized as NFTs. The app serves as a market place to list and buy these NFT deeds (and all the property rights that go along with that in a world where legally tokenized deeds are commonplace). It is currently available to play with on the **Goerli test network**.
 
 ### *Back End*
 

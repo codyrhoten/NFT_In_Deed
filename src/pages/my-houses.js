@@ -6,11 +6,12 @@ import { houseNftAddress, marketAddress } from '../../config';
 const Marketplace = require('../../artifacts/contracts/Market.sol/Market.json');
 const HouseNFT = require('../../artifacts/contracts/HouseNFT.sol/HouseNFT.json');
 import axios from 'axios';
+import { notify } from '../../utils/notification';
 import { Button, Col, Container, Row } from 'react-bootstrap';
 
 export default function MyHouses() {
     const [houses, setHouses] = useState([]);
-    const [loadingState, setLoadingState] = useState('not-loaded');
+    // const [loadingState, setLoadingState] = useState('not-loaded');
     const router = useRouter();
 
     async function loadHouses() {
@@ -43,14 +44,18 @@ export default function MyHouses() {
                 };
                 return house;
             } catch (err) {
+                if (err.message.includes('Already processing eth_requestAccounts' || 'User Rejected')) {
+                    notify('Wallet', 'Please sign in to MetaMask.')
+                    return null;
+                }
+
                 console.log(err);
                 return null;
             }
         }));
 
         setHouses(myHouses.filter(house => house !== null));
-        console.log(houses)
-        setLoadingState('loaded');
+        //setLoadingState('loaded');
     }
 
     function listHouse(house) {
@@ -62,7 +67,7 @@ export default function MyHouses() {
     if (houses.length === 0) {
         return (
             <h4 className='mt-5 text-center'>This wallet doesn't contain any NFTs-in-Deed</h4>
-        );
+        )
     } else {
         return (
             <div className='mb-4 flex justify-center'>

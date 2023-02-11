@@ -14,7 +14,7 @@ export default function ConnectButton({ metamaskInstalled, connectWalletPressed,
                         "..." +
                         String(walletAddress).substring(38)
                     ) : (
-                        <span>Connect wallet in Goerli test network</span>
+                        <span>Connect wallet to Goerli</span>
                     )}
                 </Button>
             )}

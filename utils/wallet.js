@@ -14,6 +14,10 @@ export default async function getWalletConnected() {
                 return { address: '', status: 'No wallet loaded' };
             }
         } catch (err) {
+            if (err.message.includes('Already processing eth_requestAccounts')) {
+                return { address: '', status: 'Please sign in to MetaMask.' };
+            }
+
             return { address: '', status: err.message };
         }
     } else {

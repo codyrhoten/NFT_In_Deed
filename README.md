@@ -10,10 +10,9 @@ npm install
 
 npm run dev
 ```
-then open your browser and search <https://localhost:3000>
-**OR**
+then open your browser to "https://localhost:3000"
 
-view NFT-in-Deed market <a href="https://nft-in-deed.vercel.app//">here</a>
+<!-- view NFT-in-Deed market <a href="https://nft-in-deed.vercel.app//">here</a> -->
 
 ## About
 

@@ -3,11 +3,21 @@
 
 <img src="/src/public/home-pg.png" alt="home page">
 
-<a href="https://nft-in-deed.vercel.app//">View NFT-in-Deed Market</a>
+## Installation
+
+```sh
+npm install
+
+npm run dev
+```
+then open your browser and search <https://localhost:3000>
+**OR**
+
+view NFT-in-Deed market <a href="https://nft-in-deed.vercel.app//">here</a>
 
 ## About
 
-Created an application that interacts with smart contracts which maintain house deeds tokenized as NFTs. The app serves as a market place to list and buy these NFT deeds (and all the property rights that go along with that in a world where legally tokenized deeds are commonplace). It is currently available to play with on the **Goerli test network**.
+Created an application that interacts with smart contracts which maintain house deeds tokenized as NFTs. The app serves as a market place to list and buy these NFT deeds, imagining a world where legally tokenized deeds are commonplace. It is currently available to play with on the **Goerli test network**.
 
 ### *Back End*
 

@@ -205,7 +205,7 @@ export default function ListHome() {
                                 <Form.Control
                                     required
                                     type="string"
-                                    placeholder="street, apt/suite/floor, city, state, zip"
+                                    placeholder="street, unit, city, state, postal code, country"
                                     className="border rounded p-2"
                                     value={formInput.address ? formInput.address : ""}
                                     onChange={(e) =>

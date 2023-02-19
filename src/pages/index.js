@@ -12,7 +12,6 @@ import { notify, update } from '../../utils/notification';
 
 export default function HomePage() {
     const [houses, setHouses] = useState([]);
-    // const [isLoading, setLoadingState] = useState(false);
     const [isTransacting, setIsTransacting] = useState(false);
     const [isConnected, setIsConnected] = useState(false);
     const [walletAddress, setWallet] = useState(false);
@@ -111,6 +110,7 @@ export default function HomePage() {
         const provider = new ethers.providers.Web3Provider(connection);
         const signer = provider.getSigner();
         const priceInWei = ethers.utils.parseUnits(house.price.toString(), 'ether');
+        let tx = null;
 
         try {
             const marketContract = new ethers.Contract(
@@ -119,18 +119,17 @@ export default function HomePage() {
                 signer
             );
 
-            const tx = await marketContract.buyHouse(houseNftAddress, house.houseId, {
-                value: priceInWei,
-            });
+            tx = await marketContract.buyHouse(
+                houseNftAddress, 
+                house.houseId, 
+                { value: priceInWei }
+            );
 
-            setLoadingState(true);
             notify('Purchase', 'Purchasing house ...');
-            await tx.wait();
 
-            setLoadingState(false);
+            await tx.wait();
             update('Purchase', 'House successfully purchased!');
         } catch (err) {
-            console.log(err.message);
             let errorMessage = '';
 
             if (err.message.includes('insufficient funds')) {
@@ -139,12 +138,14 @@ export default function HomePage() {
             }
 
             if (err.message.includes("user rejected")) {
-                errorMessage =
-                    "Transaction was rejected by the user. Try again?";
+                errorMessage = "Transaction was rejected by the user. Try again?";
             }
 
-            toast.error(errorMessage);
-            setIsTransacting(false);
+            if (errorMessage) {
+                toast.error(errorMessage);
+            } else {
+                console.log(err.message);
+            }
         }
 
         setIsTransacting(false);

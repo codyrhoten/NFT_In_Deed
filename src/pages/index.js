@@ -185,7 +185,7 @@ export default function HomePage() {
                         </div>
                     </div>
                 ) : (
-                    <div className='mb-4 flex justify-center px-4'>
+                    <div className='mb-4 flex justify-center px-4' style={{ marginTop: '100px' }}>
                         <Container>
                             <Row xs='1' lg='3' className='justify-content-md-center'>
                                 {houses.map((h, i) => (

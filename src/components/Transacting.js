@@ -2,7 +2,7 @@
 
 export default function Transacting(/* { isLoading } */) {
     return (
-        <div className='flex justify-center mt-10'>
+        <div className='flex justify-center' style={{ marginTop: '150px' }}>
             <div className='flex flex-col pb-12'>
                 <h2 className='py-2 text-center'>Tokenization/Listing Process</h2>
                 <p className='p-4 my-3'>

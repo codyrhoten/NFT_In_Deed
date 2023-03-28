@@ -92,7 +92,7 @@ export default function HouseResale() {
     return (
         <>
             {isTransacting ? (
-                <div className='flex justify-center mt-10'>
+                <div className='flex justify-center mt-10' style={{ marginTop: '100px' }}>
                     <div className='flex flex-col pb-12'>
                         <h2 className='py-2 text-center'>Tokenization/Listing Process</h2>
                         <p className='p-4 my-3'>
@@ -120,7 +120,7 @@ export default function HouseResale() {
                     </div>
                 </div>
             ) : (
-                <Container className='flex justify-center'>
+                <Container className='flex justify-center' style={{ marginTop: '100px' }}>
                     <div className='w-1/2 flex flex-col pb-12'>
                         <h2 className='text-2xl mt-4 text-center bg-gray-100 rounded'>
                             List your house

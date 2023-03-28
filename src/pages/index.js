@@ -88,19 +88,21 @@ export default function HomePage() {
     }, []);
 
     function houseOwner(id) {
-        let _houses = houses.filter(h => {
-            Number(h.houseId) === Number(id) && h.seller.toLowerCase() === walletAddress;
+        const _house = houses.map(h => {
+            if (Number(h.houseId) == id &&  h.seller.toLowerCase() == walletAddress) {
+                return h.seller.toLowerCase();
+            }
         });
-
-        console.log(_houses.length)
-        return _houses.length;
+        
+        console.log('house', _house)
+        return _house[0];
     }
 
     async function buyHouse(house) {
         const isOwner = houseOwner(house.houseId);
 
-        if (isOwner) {
-            toast.error('You may not buy a house that you tokenized');
+        if (isOwner != undefined) {
+            toast.error('You may not buy a house that you are selling.');
             return;
         }
 
@@ -154,7 +156,7 @@ export default function HomePage() {
 
     if (houses.length === 0) {
         return (
-            <h4 className='mt-5 text-center'>
+            <h4 className='text-center' style={{ marginTop: '100px' }}>
                 Be the first to list an NFT-in-deed! &#127968;
             </h4>
         );
@@ -162,7 +164,7 @@ export default function HomePage() {
         return (
             <>
                 {isTransacting ? (
-                    <div className='flex justify-center mt-10'>
+                    <div className='flex justify-center' style={{ marginTop: '100px' }}>
                         <div className='flex flex-col pb-12'>
                             <h2 className='py-2 text-center'>Here's how this goes:</h2>
                             <p className='p-4 my-3'>

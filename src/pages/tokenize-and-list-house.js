@@ -193,7 +193,7 @@ export default function ListHome() {
             {isTransacting ? (
                 <Transacting /* isLoading={isLoading} */ />
             ) : (
-                <Container className="flex justify-center">
+                <Container className="flex justify-center" style={{ marginTop: '100px' }}>
                     <div className="flex flex-col pb-12">
                         <h2 className="mt-4 text-center">List your house</h2>
                         <p className="text-center"><i>3% listing fee</i></p>

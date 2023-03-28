@@ -66,14 +66,16 @@ export default function MyHouses() {
 
     if (houses.length === 0) {
         return (
-            <h4 className='mt-5 text-center'>This wallet doesn't contain any NFTs-in-Deed</h4>
+            <h4 className='text-center' style={{ marginTop: '100px' }}>
+                This wallet doesn't contain any NFTs-in-Deed
+            </h4>
         )
     } else {
         return (
-            <div className='mb-4 flex justify-center'>
+            <div className='mb-4 flex justify-center' style={{ marginTop: '100px' }}>
                 <div className='px-4'>
                     <Container>
-                    <h4 className='my-4 text-center'>My NFTs-in-Deed</h4>
+                        <h4 className='my-4 text-center'>My NFTs-in-Deed</h4>
                         <Row xs='1' lg='3' className='justify-content-md-center'>
                             {houses.map((h, i) => (
                                 <Col key={i} className='shadow rounded overflow-hidden mx-2' lg={true}>

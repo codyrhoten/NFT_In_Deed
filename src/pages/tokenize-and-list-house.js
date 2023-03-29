@@ -9,7 +9,7 @@ import { houseNftAddress, marketAddress } from '../../config';
 import { Button, Col, Container, Form, Row } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import { notify, update } from '../../utils/notification';
-import Transacting from '../components/Transacting';
+import TxModal from '../components/TxModal';
 
 const projectSecret = process.env.NEXT_PUBLIC_IPFS_KEY_SECRET;
 const projectId = process.env.NEXT_PUBLIC_IPFS_PROJECT_ID;
@@ -24,6 +24,7 @@ const client = ipfsHttpClient({
 });
 
 export default function ListHome() {
+    const [show, setShow] = useState(false);
     const [fileUrl, setFileUrl] = useState(null);
     const [isTransacting, setIsTransacting] = useState(false);
     // const [isLoading, setLoadingState] = useState(false);
@@ -37,7 +38,8 @@ export default function ListHome() {
         lotSqFt: '',
         yearBuilt: '',
     });
-
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
     const router = useRouter();
 
     async function onChange(e) {
@@ -110,6 +112,7 @@ export default function ListHome() {
 
         try {
             setIsTransacting(true);
+            handleShow();
 
             // Mint a house
             let mintedHouse = await houseNFTContract.mint(url);
@@ -191,7 +194,7 @@ export default function ListHome() {
     return (
         <>
             {isTransacting ? (
-                <Transacting /* isLoading={isLoading} */ />
+                <TxModal show={show} handleClose={handleClose} tokenize={true} />
             ) : (
                 <Container className="flex justify-center" style={{ marginTop: '100px' }}>
                     <div className="flex flex-col pb-12">

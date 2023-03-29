@@ -9,12 +9,16 @@ import { Button, Col, Container, Row } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 // import Image from 'next/image';
 import { notify, update } from '../../utils/notification';
+import TxModal from '../components/TxModal';
 
 export default function HomePage() {
+    const [show, setShow] = useState(false);
     const [houses, setHouses] = useState([]);
     const [isTransacting, setIsTransacting] = useState(false);
     const [isConnected, setIsConnected] = useState(false);
     const [walletAddress, setWallet] = useState(false);
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
 
     async function loadHouses() {
         const provider = new ethers.providers.Web3Provider(ethereum);
@@ -107,6 +111,8 @@ export default function HomePage() {
         }
 
         setIsTransacting(true);
+        handleShow();
+        
         const web3Modal = new Web3Modal();
         const connection = await web3Modal.connect();
         const provider = new ethers.providers.Web3Provider(connection);
@@ -164,32 +170,11 @@ export default function HomePage() {
         return (
             <>
                 {isTransacting ? (
-                    <div className='flex justify-center' style={{ marginTop: '100px' }}>
-                        <div className='flex flex-col pb-12'>
-                            <h2 className='py-2 text-center'>Here's how this goes:</h2>
-                            <p className='p-4 my-3'>
-                                <b>Step 1:</b> Purchase house NFT from the seller. Confirm the
-                                transaction on your wallet.
-                            </p>
-                            <p className='p-4 my-3'>
-                                <b>Step 2:</b> Wait a few seconds for the transaction to be processed.
-                            </p>
-                            {/* {isLoading && (
-                                <div className='flex justify-center'>
-                                    <Image
-                                        src={'/loading-spinner.gif'}
-                                        alt='loading spinner'
-                                        width='175'
-                                        height='175'
-                                    />
-                                </div>
-                            )} */}
-                        </div>
-                    </div>
+                    <TxModal show={show} handleClose={handleClose} index={true} />
                 ) : (
                     <div className='mb-4 flex justify-center px-4' style={{ marginTop: '100px' }}>
                         <Container>
-                            <Row xs='1' lg='3' className='justify-content-md-center'>
+                            <Row xs='1' lg='3' className='justify-content-center'>
                                 {houses.map((h, i) => (
                                     <Col
                                         key={i}

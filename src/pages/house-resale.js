@@ -8,15 +8,19 @@ const Marketplace = require('../../artifacts/contracts/Market.sol/Market.json');
 import { houseNftAddress, marketAddress } from '../../config';
 import { toast } from 'react-toastify';
 import { notify, update } from '../../utils/notification';
-import { Button, Container, Form } from 'react-bootstrap';
+import { Button, Container, Form, Modal } from 'react-bootstrap';
+import TxModal from '../components/TxModal';
 
 export default function HouseResale() {
+    const [show, setShow] = useState(false);
     const [formInput, updateFormInput] = useState({ priceInEth: '', image: '', });
     const [isTransacting, setIsTransacting] = useState(false);
     // const [isLoading, setLoadingState] = useState(false);
     const { image } = formInput;
     const router = useRouter();
     const { id, houseURI } = router.query;
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
 
     async function getHouse() {
         if (!houseURI) {
@@ -42,6 +46,7 @@ export default function HouseResale() {
 
         try {
             setIsTransacting(true);
+            handleShow();
 
             const userApproval = await houseNFTContract.setApprovalForAll(
                 marketAddress,
@@ -92,33 +97,7 @@ export default function HouseResale() {
     return (
         <>
             {isTransacting ? (
-                <div className='flex justify-center mt-10' style={{ marginTop: '100px' }}>
-                    <div className='flex flex-col pb-12'>
-                        <h2 className='py-2 text-center'>Tokenization/Listing Process</h2>
-                        <p className='p-4 my-3'>
-                            <b>Step 1:</b> Give approval to the Market to receive and later sell the deed. Confirm the transaction in your wallet.
-                        </p>
-                        <p className='p-4 my-3'>
-                            <b>Step 2:</b> Wait for a few seconds for the transaction to be processed.
-                        </p>
-                        <p className='p-4 my-3'>
-                            <b>Step 3:</b> Now for the listing transaction: this comes with a 3% listing fee. Confirm the transaction in your wallet.
-                        </p>
-                        <p className='pt-1 p-4 my-3'>
-                            <b>Step 4:</b> Wait another few seconds for the transaction to be processed. Then your house will be up on the NFT-in-Deed Market for sale again!
-                        </p>
-                        {/* {isLoading && (
-                        <div className='flex justify-center'>
-                            <Image
-                                src={'/loading-spinner.gif'}
-                                alt='loading spinner'
-                                width='175'
-                                height='175'
-                            />
-                        </div>
-                    )} */}
-                    </div>
-                </div>
+                <TxModal show={show} handleClose={handleClose} houseResale={true} />
             ) : (
                 <Container className='flex justify-center' style={{ marginTop: '100px' }}>
                     <div className='w-1/2 flex flex-col pb-12'>

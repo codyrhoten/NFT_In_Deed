@@ -14,7 +14,6 @@ import TxModal from '../components/TxModal';
 export default function HouseResale() {
     const [show, setShow] = useState(false);
     const [formInput, updateFormInput] = useState({ priceInEth: '', image: '', });
-    const [isTransacting, setIsTransacting] = useState(false);
     // const [isLoading, setLoadingState] = useState(false);
     const { image } = formInput;
     const router = useRouter();
@@ -45,7 +44,6 @@ export default function HouseResale() {
         const priceInWei = ethers.utils.parseUnits(formInput.priceInEth, 'ether');
 
         try {
-            setIsTransacting(true);
             handleShow();
 
             const userApproval = await houseNFTContract.setApprovalForAll(
@@ -72,7 +70,7 @@ export default function HouseResale() {
 
             // setLoadingState(false);
             update('Market', 'NFT-in-Deed successfully listed!');
-            setIsTransacting(false);
+            handleClose();
 
             router.push('/');
         } catch (err) {
@@ -90,50 +88,47 @@ export default function HouseResale() {
             }
 
             toast.error(errorMessage);
-            setIsTransacting(false);
+            handleClose();
         }
     }
 
     return (
         <>
-            {isTransacting ? (
-                <TxModal show={show} handleClose={handleClose} houseResale={true} />
-            ) : (
-                <Container className='flex justify-center' style={{ marginTop: '100px' }}>
-                    <div className='w-1/2 flex flex-col pb-12'>
-                        <h2 className='text-2xl mt-4 text-center bg-gray-100 rounded'>
-                            List your house
-                        </h2>
-                        <Form className='justify-content-md-center' onSubmit={listHouse}>
-                            <Form.Control
-                                require
-                                type='number'
-                                placeholder='price in ETH'
-                                className='border rounded mx-auto'
-                                value={formInput.priceInEth ? formInput.priceInEth : ''}
-                                onChange={e => updateFormInput({
-                                    ...formInput,
-                                    priceInEth: e.target.value
-                                })}
-                            />
-                            {image && (
-                                <div className='mt-4 text-center'>
-                                    <img
-                                        className='rounded mx-auto'
-                                        width='400'
-                                        src={image}
-                                    />
-                                </div>
-                            )}
-                            <div className='text-center'>
-                                <Button type='submit' className='my-4 rounded px-5 py-2 shadow-lg'>
-                                    Resell house
-                                </Button>
+            <TxModal show={show} handleClose={handleClose} houseResale={true} />
+            <Container className='flex justify-center' style={{ marginTop: '100px' }}>
+                <div className='w-1/2 flex flex-col pb-12'>
+                    <h2 className='text-2xl mt-4 text-center bg-gray-100 rounded'>
+                        List your house
+                    </h2>
+                    <Form className='justify-content-md-center' onSubmit={listHouse}>
+                        <Form.Control
+                            require
+                            type='number'
+                            placeholder='price in ETH'
+                            className='border rounded mx-auto'
+                            value={formInput.priceInEth ? formInput.priceInEth : ''}
+                            onChange={e => updateFormInput({
+                                ...formInput,
+                                priceInEth: e.target.value
+                            })}
+                        />
+                        {image && (
+                            <div className='mt-4 text-center'>
+                                <img
+                                    className='rounded mx-auto'
+                                    width='400'
+                                    src={image}
+                                />
                             </div>
-                        </Form>
-                    </div>
-                </Container>
-            )}
+                        )}
+                        <div className='text-center'>
+                            <Button type='submit' className='my-4 rounded px-5 py-2 shadow-lg'>
+                                Resell house
+                            </Button>
+                        </div>
+                    </Form>
+                </div>
+            </Container>
         </>
     );
 }

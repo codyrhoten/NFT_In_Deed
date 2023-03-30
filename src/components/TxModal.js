@@ -1,9 +1,9 @@
 // import Image from 'next/image';
 import { Modal } from "react-bootstrap";
 
-export default function TxModal({ show, handleClose, index, houseResale, tokenize }) {
+export default function TxModal({ show, index, houseResale, tokenize }) {
     return (
-        <Modal show={show} onHide={handleClose}>
+        <Modal show={show}>
             <Modal.Header>
                 <Modal.Title>
                     {

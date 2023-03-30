@@ -26,7 +26,6 @@ const client = ipfsHttpClient({
 export default function ListHome() {
     const [show, setShow] = useState(false);
     const [fileUrl, setFileUrl] = useState(null);
-    const [isTransacting, setIsTransacting] = useState(false);
     // const [isLoading, setLoadingState] = useState(false);
     const [formInput, updateFormInput] = useState({
         priceInEth: '',
@@ -71,7 +70,7 @@ export default function ListHome() {
             lotSqFt,
             yearBuilt
         });
-        
+
         // upload metadata to IPFS
         try {
             const added = await client.add(data);
@@ -82,7 +81,6 @@ export default function ListHome() {
         } catch (error) {
             toast.error("Error uploading file. Try again");
             setFileUrl(null);
-            setIsTransacting(false);
         }
     }
 
@@ -94,7 +92,7 @@ export default function ListHome() {
         const provider = new ethers.providers.Web3Provider(connection);
         const url = await uploadToIPFS();
         const signer = provider.getSigner();
-        const userBalance =  signer.getBalance().toString();
+        const userBalance = signer.getBalance().toString();
         const houseNFTContract = new ethers.Contract(houseNftAddress, HouseNFT.abi, signer);
         const marketContract = new ethers.Contract(marketAddress, Marketplace.abi, signer);
 
@@ -111,7 +109,6 @@ export default function ListHome() {
         }
 
         try {
-            setIsTransacting(true);
             handleShow();
 
             // Mint a house
@@ -140,7 +137,7 @@ export default function ListHome() {
 
             // setLoadingState(false);
             update('Market', 'NFT-in-Deed successfully listed!');
-            setIsTransacting(false);
+            handleClose();
             router.push("/");
         } catch (err) {
             console.log(err.message);
@@ -158,7 +155,7 @@ export default function ListHome() {
             }
 
             toast.error(errorMessage);
-            setIsTransacting(false);
+            handleClose();
         }
     }
 
@@ -193,154 +190,151 @@ export default function ListHome() {
 
     return (
         <>
-            {isTransacting ? (
-                <TxModal show={show} handleClose={handleClose} tokenize={true} />
-            ) : (
-                <Container className="flex justify-center" style={{ marginTop: '100px' }}>
-                    <div className="flex flex-col pb-12">
-                        <h2 className="mt-4 text-center">List your house</h2>
-                        <p className="text-center"><i>3% listing fee</i></p>
-                        <Form
-                            className="justify-content-md-center"
-                            onSubmit={tokenizeAndListHouse}
-                        >
-                            <Col>
-                                <Form.Control
-                                    required
-                                    type="string"
-                                    placeholder="street, unit, city, state, postal code, country"
-                                    className="border rounded p-2"
-                                    value={formInput.address ? formInput.address : ""}
-                                    onChange={(e) =>
-                                        updateFormInput({
-                                            ...formInput,
-                                            address: e.target.value,
-                                        })
-                                    }
-                                />
-                            </Col>
-                            <Col sm={2} className="mt-4">
-                                <Form.Control
-                                    required
-                                    type="number"
-                                    placeholder="price in ETH"
-                                    className="border rounded"
-                                    value={formInput.priceInEth ? formInput.priceInEth : ""}
-                                    onChange={(e) =>
-                                        updateFormInput({
-                                            ...formInput,
-                                            priceInEth: e.target.value,
-                                        })
-                                    }
-                                />
-                            </Col>
+            <TxModal show={show} handleClose={handleClose} tokenize={true} />
+            <Container className="flex justify-center" style={{ marginTop: '100px' }}>
+                <div className="flex flex-col pb-12">
+                    <h2 className="mt-4 text-center">List your house</h2>
+                    <p className="text-center"><i>3% listing fee</i></p>
+                    <Form
+                        className="justify-content-md-center"
+                        onSubmit={tokenizeAndListHouse}
+                    >
+                        <Col>
                             <Form.Control
                                 required
-                                type="file"
-                                name="House"
-                                className="mt-4"
-                                onChange={onChange}
+                                type="string"
+                                placeholder="street, unit, city, state, postal code, country"
+                                className="border rounded p-2"
+                                value={formInput.address ? formInput.address : ""}
+                                onChange={(e) =>
+                                    updateFormInput({
+                                        ...formInput,
+                                        address: e.target.value,
+                                    })
+                                }
                             />
-                            {fileUrl && (
-                                <div className="text-center">
-                                    <img className="rounded mt-4" width="350" src={fileUrl} />
-                                </div>
-                            )}
-                            <Row className="mt-4" xs={2}>
-                                <Col sm={1}>
-                                    <Form.Group>
-                                        <Form.Label>Bedrooms</Form.Label>
-                                        <Form.Select
-                                            onChange={(e) =>
-                                                updateFormInput({
-                                                    ...formInput,
-                                                    bedrooms: e.target.value || '1',
-                                                })
-                                            }
-                                        >
-                                            {getBedroomOptions()}
-                                        </Form.Select>
-                                    </Form.Group>
-                                </Col>
-                                <Col sm={1}>
-                                    <Form.Group>
-                                        <Form.Label>Bathrooms</Form.Label>
-                                        <Form.Select
-                                            onChange={(e) =>
-                                                updateFormInput({
-                                                    ...formInput,
-                                                    bathrooms: e.target.value || '1',
-                                                })
-                                            }
-                                        >
-                                            {getBathroomOptions()}
-                                        </Form.Select>
-                                    </Form.Group>
-                                </Col>
-                                <Col sm={2}>
-                                    <Form.Group>
-                                        <Form.Label>Interior Sq Ft</Form.Label>
-                                        <Form.Control
-                                            required
-                                            type="number"
-                                            placeholder="1,250"
-                                            value={formInput.houseSqFt ? formInput.houseSqFt : ""}
-                                            onChange={(e) =>
-                                                updateFormInput({
-                                                    ...formInput,
-                                                    houseSqFt: e.target.value,
-                                                })
-                                            }
-                                        />
-                                    </Form.Group>
-                                </Col>
-                                <Col sm={2}>
-                                    <Form.Group>
-                                        <Form.Label>Lot Sq Ft</Form.Label>
-                                        <Form.Control
-                                            required
-                                            type="number"
-                                            placeholder="10,000"
-                                            value={formInput.lotSqFt ? formInput.lotSqFt : ""}
-                                            onChange={(e) =>
-                                                updateFormInput({
-                                                    ...formInput,
-                                                    lotSqFt: e.target.value,
-                                                })
-                                            }
-                                        />
-                                    </Form.Group>
-                                </Col>
-                                <Col sm={2}>
-                                    <Form.Group>
-                                        <Form.Label>Year built</Form.Label>
-                                        <Form.Control
-                                            required
-                                            type="number"
-                                            placeholder="YYYY"
-                                            value={formInput.yearBuilt ? formInput.yearBuilt : ""}
-                                            onChange={(e) =>
-                                                updateFormInput({
-                                                    ...formInput,
-                                                    yearBuilt: e.target.value,
-                                                })
-                                            }
-                                        />
-                                    </Form.Group>
-                                </Col>
-                            </Row>
+                        </Col>
+                        <Col sm={2} className="mt-4">
+                            <Form.Control
+                                required
+                                type="number"
+                                placeholder="price in ETH"
+                                className="border rounded"
+                                value={formInput.priceInEth ? formInput.priceInEth : ""}
+                                onChange={(e) =>
+                                    updateFormInput({
+                                        ...formInput,
+                                        priceInEth: e.target.value,
+                                    })
+                                }
+                            />
+                        </Col>
+                        <Form.Control
+                            required
+                            type="file"
+                            name="House"
+                            className="mt-4"
+                            onChange={onChange}
+                        />
+                        {fileUrl && (
                             <div className="text-center">
-                                <Button
-                                    type="submit"
-                                    className="my-4 rounded px-5 py-2 shadow-lg"
-                                >
-                                    Tokenize and list house
-                                </Button>
+                                <img className="rounded mt-4" width="350" src={fileUrl} />
                             </div>
-                        </Form>
-                    </div>
-                </Container>
-            )}
+                        )}
+                        <Row className="mt-4" xs={2}>
+                            <Col sm={1}>
+                                <Form.Group>
+                                    <Form.Label>Bedrooms</Form.Label>
+                                    <Form.Select
+                                        onChange={(e) =>
+                                            updateFormInput({
+                                                ...formInput,
+                                                bedrooms: e.target.value || '1',
+                                            })
+                                        }
+                                    >
+                                        {getBedroomOptions()}
+                                    </Form.Select>
+                                </Form.Group>
+                            </Col>
+                            <Col sm={1}>
+                                <Form.Group>
+                                    <Form.Label>Bathrooms</Form.Label>
+                                    <Form.Select
+                                        onChange={(e) =>
+                                            updateFormInput({
+                                                ...formInput,
+                                                bathrooms: e.target.value || '1',
+                                            })
+                                        }
+                                    >
+                                        {getBathroomOptions()}
+                                    </Form.Select>
+                                </Form.Group>
+                            </Col>
+                            <Col sm={2}>
+                                <Form.Group>
+                                    <Form.Label>Interior Sq Ft</Form.Label>
+                                    <Form.Control
+                                        required
+                                        type="number"
+                                        placeholder="1,250"
+                                        value={formInput.houseSqFt ? formInput.houseSqFt : ""}
+                                        onChange={(e) =>
+                                            updateFormInput({
+                                                ...formInput,
+                                                houseSqFt: e.target.value,
+                                            })
+                                        }
+                                    />
+                                </Form.Group>
+                            </Col>
+                            <Col sm={2}>
+                                <Form.Group>
+                                    <Form.Label>Lot Sq Ft</Form.Label>
+                                    <Form.Control
+                                        required
+                                        type="number"
+                                        placeholder="10,000"
+                                        value={formInput.lotSqFt ? formInput.lotSqFt : ""}
+                                        onChange={(e) =>
+                                            updateFormInput({
+                                                ...formInput,
+                                                lotSqFt: e.target.value,
+                                            })
+                                        }
+                                    />
+                                </Form.Group>
+                            </Col>
+                            <Col sm={2}>
+                                <Form.Group>
+                                    <Form.Label>Year built</Form.Label>
+                                    <Form.Control
+                                        required
+                                        type="number"
+                                        placeholder="YYYY"
+                                        value={formInput.yearBuilt ? formInput.yearBuilt : ""}
+                                        onChange={(e) =>
+                                            updateFormInput({
+                                                ...formInput,
+                                                yearBuilt: e.target.value,
+                                            })
+                                        }
+                                    />
+                                </Form.Group>
+                            </Col>
+                        </Row>
+                        <div className="text-center">
+                            <Button
+                                type="submit"
+                                className="my-4 rounded px-5 py-2 shadow-lg"
+                            >
+                                Tokenize and list house
+                            </Button>
+                        </div>
+                    </Form>
+                </div>
+            </Container>
         </>
     );
 }

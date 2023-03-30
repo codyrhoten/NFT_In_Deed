@@ -14,7 +14,6 @@ import TxModal from '../components/TxModal';
 export default function HomePage() {
     const [show, setShow] = useState(false);
     const [houses, setHouses] = useState([]);
-    const [isTransacting, setIsTransacting] = useState(false);
     const [isConnected, setIsConnected] = useState(false);
     const [walletAddress, setWallet] = useState(false);
     const handleClose = () => setShow(false);
@@ -93,11 +92,11 @@ export default function HomePage() {
 
     function houseOwner(id) {
         const _house = houses.map(h => {
-            if (Number(h.houseId) == id &&  h.seller.toLowerCase() == walletAddress) {
+            if (Number(h.houseId) == id && h.seller.toLowerCase() == walletAddress) {
                 return h.seller.toLowerCase();
             }
         });
-        
+
         console.log('house', _house)
         return _house[0];
     }
@@ -110,9 +109,8 @@ export default function HomePage() {
             return;
         }
 
-        setIsTransacting(true);
         handleShow();
-        
+
         const web3Modal = new Web3Modal();
         const connection = await web3Modal.connect();
         const provider = new ethers.providers.Web3Provider(connection);
@@ -128,14 +126,15 @@ export default function HomePage() {
             );
 
             tx = await marketContract.buyHouse(
-                houseNftAddress, 
-                house.houseId, 
+                houseNftAddress,
+                house.houseId,
                 { value: priceInWei }
             );
 
             notify('Purchase', 'Purchasing house ...');
 
             await tx.wait();
+            handleClose();
             update('Purchase', 'House successfully purchased!');
         } catch (err) {
             let errorMessage = '';
@@ -156,7 +155,7 @@ export default function HomePage() {
             }
         }
 
-        setIsTransacting(false);
+        handleClose();
         loadHouses();
     }
 
@@ -169,45 +168,42 @@ export default function HomePage() {
     } else {
         return (
             <>
-                {isTransacting ? (
-                    <TxModal show={show} handleClose={handleClose} index={true} />
-                ) : (
-                    <div className='mb-4 flex justify-center px-4' style={{ marginTop: '100px' }}>
-                        <Container>
-                            <Row xs='1' lg='3' className='justify-content-center'>
-                                {houses.map((h, i) => (
-                                    <Col
-                                        key={i}
-                                        className='shadow rounded overflow-hidden m-3'
-                                        lg={true}
-                                    >
-                                        <p className='text-center mt-3'>
-                                            <b>{h.address}</b>
-                                        </p>
-                                        <div className='text-center'>
-                                            <img src={h.imageURL} className='rounded' height='125' />
-                                        </div>
-                                        <p className='text-center mt-2'>{h.price} ETH</p>
-                                        <p align='center'>
-                                            {`${h.bedrooms} bed, ${h.bathrooms} bath, ${h.houseSqFt} sq ft home, ${h.lotSqFt} sq ft lot, built ${h.yearBuilt}`}
-                                        </p>
-                                        <div className='text-center'>
-                                            <Button
-                                                style={{ display: isConnected ? 'block' : 'none' }}
-                                                className='px-3 mx-auto mb-4'
-                                                onClick={() => {
-                                                    buyHouse(h);
-                                                }}
-                                            >
-                                                Buy
-                                            </Button>
-                                        </div>
-                                    </Col>
-                                ))}
-                            </Row>
-                        </Container>
-                    </div>
-                )}
+                <TxModal show={show} handleClose={handleClose} index={true} />
+                <div className='mb-4 flex justify-center px-4' style={{ marginTop: '100px' }}>
+                    <Container>
+                        <Row xs='1' lg='3' className='justify-content-center'>
+                            {houses.map((h, i) => (
+                                <Col
+                                    key={i}
+                                    className='shadow rounded overflow-hidden m-3'
+                                    lg={true}
+                                >
+                                    <p className='text-center mt-3'>
+                                        <b>{h.address}</b>
+                                    </p>
+                                    <div className='text-center'>
+                                        <img src={h.imageURL} className='rounded' height='125' />
+                                    </div>
+                                    <p className='text-center mt-2'>{h.price} ETH</p>
+                                    <p align='center'>
+                                        {`${h.bedrooms} bed, ${h.bathrooms} bath, ${h.houseSqFt} sq ft home, ${h.lotSqFt} sq ft lot, built ${h.yearBuilt}`}
+                                    </p>
+                                    <div className='text-center'>
+                                        <Button
+                                            style={{ display: isConnected ? 'block' : 'none' }}
+                                            className='px-3 mx-auto mb-4'
+                                            onClick={() => {
+                                                buyHouse(h);
+                                            }}
+                                        >
+                                            Buy
+                                        </Button>
+                                    </div>
+                                </Col>
+                            ))}
+                        </Row>
+                    </Container>
+                </div>
             </>
         );
     }

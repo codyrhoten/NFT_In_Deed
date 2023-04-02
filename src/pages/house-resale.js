@@ -74,7 +74,6 @@ export default function HouseResale() {
 
             router.push('/');
         } catch (err) {
-            console.log(err.message);
             let errorMessage = '';
 
             if (err.message.includes('insufficient funds')) {

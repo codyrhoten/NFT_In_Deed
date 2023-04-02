@@ -133,7 +133,7 @@ export default function ListHome() {
 
             // setLoadingState(true);
             notify('Market', 'Listing new NFT-in-Deed ...');
-            listing.wait();
+            await listing.wait();
 
             // setLoadingState(false);
             update('Market', 'NFT-in-Deed successfully listed!');

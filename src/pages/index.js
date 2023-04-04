@@ -1,17 +1,19 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+// contract interaction modules
 import Web3Modal from 'web3modal';
 import { ethers } from 'ethers';
 import { houseNftAddress, marketAddress } from '../../config';
 const Marketplace = require('../../artifacts/contracts/Market.sol/Market.json');
 const HouseNFT = require('../../artifacts/contracts/HouseNFT.sol/HouseNFT.json');
+// front-end modules
 import { Button, Col, Container, Row } from 'react-bootstrap';
+import Loader from '../components/Loader';
 import { toast } from 'react-toastify';
-// import Image from 'next/image';
 import { notify, update } from '../../utils/notification';
 import TxModal from '../components/TxModal';
 
-export default function HomePage() {
+export default function HomePage({ setLoading }) {
     const [show, setShow] = useState(false);
     const [houses, setHouses] = useState([]);
     const [isConnected, setIsConnected] = useState(false);
@@ -60,6 +62,7 @@ export default function HomePage() {
         );
 
         setHouses(_houses.filter((house) => house !== null));
+        setLoading(false);
     }
 
     async function walletListener() {
@@ -86,6 +89,7 @@ export default function HomePage() {
     }
 
     useEffect(() => {
+        setLoading(true);
         loadHouses();
         walletListener();
     }, []);

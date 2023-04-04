@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { events } from 'next/router';
 import Web3Modal from 'web3modal';
 import { ethers } from 'ethers';
 import { useRouter } from 'next/router';
@@ -8,11 +9,15 @@ const HouseNFT = require('../../artifacts/contracts/HouseNFT.sol/HouseNFT.json')
 import axios from 'axios';
 import { notify } from '../../utils/notification';
 import { Button, Col, Container, Row } from 'react-bootstrap';
+import Loader from '../components/Loader';
 
 export default function MyHouses() {
+    const [loading, setLoading] = useState(false);
     const [houses, setHouses] = useState([]);
     // const [loadingState, setLoadingState] = useState('not-loaded');
     const router = useRouter();
+    events.on('routeChangeStart', (url) => setLoading(true) );
+    events.on('routeChangeComplete', (url) => setLoading(false) );
 
     async function loadHouses() {
         const web3Modal = new Web3Modal();
@@ -55,21 +60,21 @@ export default function MyHouses() {
         }));
 
         setHouses(myHouses.filter(house => house !== null));
-        //setLoadingState('loaded');
+        setLoading(false);
     }
 
     function listHouse(house) {
         router.push(`house-resale?id=${house.houseId}&houseURI=${house.houseURI}`);
     }
 
-    useEffect(() => { loadHouses() }, []);
+    useEffect( () => { loadHouses() }, [] );
 
     if (houses.length === 0) {
         return (
-            <h4 className='text-center' style={{ marginTop: '100px' }}>
-                This wallet doesn't contain any NFTs-in-Deed
+            <h4 className='text-center' style={{ marginTop: '150px' }}>
+                This wallet does not contain any NFTs in-deed
             </h4>
-        )
+        );
     } else {
         return (
             <div className='mb-4 flex justify-center' style={{ marginTop: '100px' }}>

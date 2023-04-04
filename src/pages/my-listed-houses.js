@@ -9,7 +9,6 @@ import { Col, Container, Row } from 'react-bootstrap';
 
 export default function MyListedHouses() {
     const [houses, setHouses] = useState([]);
-    const [loadingState, setLoadingState] = useState('not-loaded');
 
     async function loadMyListedHouses() {
         const web3Modal = new Web3Modal();
@@ -44,7 +43,6 @@ export default function MyListedHouses() {
         }));
 
         setHouses(myHouses.filter(house => house !== null));
-        setLoadingState('loaded');
     }
 
     useEffect(() => { loadMyListedHouses() }, []);

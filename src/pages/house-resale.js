@@ -94,7 +94,7 @@ export default function HouseResale() {
     return (
         <>
             <TxModal show={show} handleClose={handleClose} houseResale={true} />
-            <Container className='flex justify-center' style={{ marginTop: '100px' }}>
+            <Container className='flex justify-center' style={{ marginTop: '150px' }}>
                 <div className='w-1/2 flex flex-col pb-12'>
                     <h2 className='text-2xl mt-4 text-center bg-gray-100 rounded'>
                         List your house

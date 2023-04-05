@@ -18,7 +18,7 @@ export default function Dapp({ Component, pageProps }) {
                 {
                     loading ?
                         <Loader width={520} height={400} /> :
-                        <Component {...pageProps} setLoading={setLoading} />
+                        <Component {...pageProps} />
                 }
             </Layout>
         </>

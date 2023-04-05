@@ -6,7 +6,7 @@ export default function ConnectButton({ metamaskInstalled, connectWalletPressed,
             <Button
                 id='walletButton'
                 onClick={connectWalletPressed}
-                className='ml-2 mr-3'
+                className='me-5'
             >
                 {walletAddress ? (
                     'Connected: ' +

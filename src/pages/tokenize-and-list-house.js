@@ -191,7 +191,7 @@ export default function ListHome() {
     return (
         <>
             <TxModal show={show} handleClose={handleClose} tokenize={true} />
-            <Container className="flex justify-center" style={{ marginTop: '100px' }}>
+            <Container className="flex justify-center" style={{ marginTop: '125px' }}>
                 <div className="flex flex-col pb-12">
                     <h2 className="mt-4 text-center">List your house</h2>
                     <p className="text-center"><i>3% listing fee</i></p>

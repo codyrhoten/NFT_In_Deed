@@ -13,7 +13,7 @@ import { toast } from 'react-toastify';
 import { notify, update } from '../../utils/notification';
 import TxModal from '../components/TxModal';
 
-export default function HomePage({ setLoading }) {
+export default function HomePage() {
     const [show, setShow] = useState(false);
     const [houses, setHouses] = useState([]);
     const [isConnected, setIsConnected] = useState(false);
@@ -62,7 +62,6 @@ export default function HomePage({ setLoading }) {
         );
 
         setHouses(_houses.filter((house) => house !== null));
-        setLoading(false);
     }
 
     async function walletListener() {
@@ -89,7 +88,6 @@ export default function HomePage({ setLoading }) {
     }
 
     useEffect(() => {
-        setLoading(true);
         loadHouses();
         walletListener();
     }, []);
@@ -165,7 +163,7 @@ export default function HomePage({ setLoading }) {
 
     if (houses.length === 0) {
         return (
-            <h4 className='text-center' style={{ marginTop: '100px' }}>
+            <h4 className='text-center' style={{ marginTop: '150px' }}>
                 Be the first to list an NFT-in-deed! &#127968;
             </h4>
         );
@@ -173,7 +171,7 @@ export default function HomePage({ setLoading }) {
         return (
             <>
                 <TxModal show={show} handleClose={handleClose} index={true} />
-                <div className='mb-4 flex justify-center px-4' style={{ marginTop: '100px' }}>
+                <div className='mb-4 flex justify-center px-4' style={{ marginTop: '150px' }}>
                     <Container>
                         <Row xs='1' lg='3' className='justify-content-center'>
                             {houses.map((h, i) => (

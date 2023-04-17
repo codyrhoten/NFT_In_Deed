@@ -1,5 +1,6 @@
 # NFT-in-Deed Market - DApp
 
+<a href="https://nftindeed.codyrhoten.com//">View NFT-in-Deed market here</a>
 
 <img src="/src/public/home-pg.png" alt="home page">
 
@@ -12,11 +13,9 @@ npm run dev
 ```
 then open your browser to "https://localhost:3000"
 
-<!-- view NFT-in-Deed market <a href="https://nft-in-deed.vercel.app//">here</a> -->
-
 ## About
 
-Created an application that interacts with smart contracts which maintain house deeds tokenized as NFTs. The app serves as a market place to list and buy these NFT deeds, imagining a world where legally tokenized deeds are commonplace. It is currently available to play with on the **Goerli test network**.
+Created an application that interacts with smart contracts which maintain house deeds tokenized as NFTs. The app serves as a market place to list and buy these NFT deeds, imagining a world where legally tokenized deeds are commonplace. It is currently available to play with on the **Goerli** test network.
 
 ### *Back End*
 

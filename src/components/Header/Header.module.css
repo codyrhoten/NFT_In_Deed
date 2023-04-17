@@ -1,9 +1,11 @@
 ._link {
     display: block;
     padding: 0.5rem 1rem;
-    color: black;
+    color: white;
     text-decoration: none;
     transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out;
+    font-family: 'Abel', sans-serif;
+    font-size: 1.2em
 }
 
 ._link:hover {
@@ -12,11 +14,14 @@
 
 .navBrand {
     display: block;
-    padding: 0.5rem 1rem;
-    color: black;
+    padding: 0.25rem 1rem;
+    color: white;
     text-decoration: none;
     transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out;
     margin-left: 30px;
+    font-family: 'Abel', sans-serif;
+    font-size: 1.5em;
+    font-weight: 'bold';
 }
 
 .navBrand:hover {

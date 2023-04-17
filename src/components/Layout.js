@@ -20,26 +20,26 @@ export default function Layout({ children }) {
                     setWallet(accounts[0]);
                     window.location.reload();
                 } else {
-                    notify('Wallet', 'Connect to MetaMask using the \'Connect wallet\' button.');
+                    notify('Wallet', 'Connect to MetaMask using the \'Connect Wallet\' button.');
                     window.location.reload();
                 }
             });
         } else {
             setStatus(
-                <>
+                <div style={{ marginTop: '150px' }}>
                     <p>
-                        {" "}You must install an Ethereum wallet called MetaMask in your browser.{" "}
-                        <Button
-                            className='mx-3 rounded px-3 py-2 shadow-lg'
-                            onClick={
-                                () => window.open('https://metamask.io/download.html', '_blank')
-                            }
-                        >
-                            Download
-                        </Button>
+                        {" "}To use this marketplace, an Ethereum wallet called MetaMask must be installed in your Chrome or Firefox browser. No other browsers are supported at this time.{" "}
                     </p>
-                    <p><i>Then, select the Goerli test network, NOT the main Ethereum network</i></p>
-                </>
+                    <Button
+                        className='mx-3 my-3 rounded px-3 py-2 shadow-lg'
+                        onClick={
+                            () => window.open('https://metamask.io/download.html', '_blank')
+                        }
+                    >
+                        Get MetaMask
+                    </Button>
+                    <p><i>Then, select the Goerli test network</i></p>
+                </div>
             );
         }
     }

@@ -4,12 +4,15 @@ import { notify } from '../../utils/notification';
 import getWalletConnected from "../../utils/wallet";
 import Header from "./Header/Header";
 import WalletStatus from "./WalletStatus";
-import { Button, Container } from "react-bootstrap";
+import { Button, Container, Modal } from "react-bootstrap";
 
 export default function Layout({ children }) {
     const [walletAddress, setWallet] = useState('');
     const [status, setStatus] = useState('');
     const [metamaskInstalled, setMetamaskInstalled] = useState(false);
+    const [show, setShow] = useState(false);
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
 
     function walletListener() {
         if (window.ethereum) {
@@ -25,20 +28,27 @@ export default function Layout({ children }) {
                 }
             });
         } else {
+            setShow(true);
             setStatus(
                 <div style={{ marginTop: '150px' }}>
-                    <p>
-                        {" "}To use this marketplace, an Ethereum wallet called MetaMask must be installed in your Chrome or Firefox browser. No other browsers are supported at this time.{" "}
-                    </p>
-                    <Button
-                        className='mx-3 my-3 rounded px-3 py-2 shadow-lg'
-                        onClick={
-                            () => window.open('https://metamask.io/download.html', '_blank')
-                        }
-                    >
-                        Get MetaMask
-                    </Button>
-                    <p><i>Then, select the Goerli test network</i></p>
+                    <Modal show={show} centered>
+                        <Modal.Body>
+                            <p>
+                                {" "}To use this marketplace, MetaMask must be installed in your browser. Click the button to see which browsers are supported.{" "}
+                            </p>
+                            <div className="text-center">
+                                <Button
+                                    className='mx-3 my-3 rounded px-3 py-2 shadow-lg'
+                                    onClick={
+                                        () => window.open('https://metamask.io/download.html', '_blank')
+                                    }
+                                >
+                                    Get MetaMask
+                                </Button>
+                                <p><i>Then, select the Goerli test network.</i></p>
+                            </div>
+                        </Modal.Body>
+                    </Modal>
                 </div>
             );
         }

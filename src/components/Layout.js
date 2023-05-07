@@ -10,13 +10,23 @@ export default function Layout({ children }) {
     const [walletAddress, setWallet] = useState('');
     const [status, setStatus] = useState('');
     const [metamaskInstalled, setMetamaskInstalled] = useState(false);
-    const [show, setShow] = useState(false);
+    const [show, setShow] = useState(true);
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
+    console.log(show);
+
+    useEffect(() => { 
+        getWallet() ;
+    }, 
+    [metamaskInstalled]);
 
     function walletListener() {
         if (window.ethereum) {
             setMetamaskInstalled(true);
+
+            if (show) {
+                handleClose();
+            }
 
             ethereum.on('accountsChanged', async accounts => {
                 if (accounts.length > 0) {
@@ -28,7 +38,6 @@ export default function Layout({ children }) {
                 }
             });
         } else {
-            setShow(true);
             setStatus(
                 <div style={{ marginTop: '150px' }}>
                     <Modal show={show} centered>
@@ -59,9 +68,8 @@ export default function Layout({ children }) {
         setWallet(address);
         notify('Wallet', status);
         walletListener();
+        console.log(show);
     }
-
-    useEffect(() => { getWallet() }, []);
 
     async function walletButtonPressed() {
         const walletResponse = await getWalletConnected();

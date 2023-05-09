@@ -25,9 +25,7 @@ export default function Layout({ children }) {
             const chain = await getChain();
             setNetwork(chain);
 
-            if (network === 'Goerli' && show) {
-                handleClose();
-            } else {
+            if (network !== 'Goerli') {
                 setStatus(
                     <Modal show={show} centered>
                         <Modal.Body>
@@ -38,6 +36,10 @@ export default function Layout({ children }) {
                     </Modal>
                 );
             }
+
+            ethereum.on('chainChanged', async () => {
+                window.location.reload();
+            });
 
             ethereum.on('accountsChanged', async accounts => {
                 if (accounts.length > 0) {

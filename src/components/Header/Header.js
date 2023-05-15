@@ -1,7 +1,7 @@
 import { Navbar, Nav } from 'react-bootstrap'
 import Link from 'next/link';
 import styles from './Header.module.css';
-import ConnectButton from '../ConnectButton';
+import { Button } from 'react-bootstrap';
 
 export default function Header({ metamaskInstalled, walletButtonPressed, walletAddress }) {
     return (
@@ -20,17 +20,30 @@ export default function Header({ metamaskInstalled, walletButtonPressed, walletA
                     <Nav.Item><Link className={styles._link} href='/my-houses'>
                         Purchased
                     </Link></Nav.Item>
-                    <div className="vr vr-blurry mx-1" style={{ color: 'white' }}/>
+                    <div className="vr vr-blurry mx-1" style={{ color: 'white' }} />
                     <Nav.Item><Link className={styles._link} href='/my-listed-houses'>
                         Listed
                     </Link></Nav.Item>
                 </Nav>
             </Navbar.Collapse>
-            <ConnectButton
-                metamaskInstalled={metamaskInstalled}
-                connectWalletPressed={walletButtonPressed}
-                walletAddress={walletAddress}
-            />
+            {
+                metamaskInstalled && (
+                    <Button
+                        id='walletButton'
+                        onClick={walletButtonPressed}
+                        className='me-5'
+                    >
+                        {walletAddress ? (
+                            'Connected: ' +
+                            String(walletAddress).substring(0, 6) +
+                            '...' +
+                            String(walletAddress).substring(38)
+                        ) : (
+                            <span>Connect Wallet</span>
+                        )}
+                    </Button>
+                )
+            }
         </Navbar >
     );
 }

@@ -49,13 +49,13 @@ export default function MyListedHouses() {
 
     if (houses.length === 0) {
         return (
-            <h4 className='text-center' style={{ marginTop: '150px' }}>
+            <h4 className='text-center' style={{ marginTop: '7.5rem' }}>
                 This wallet doesn't contain any listed NFT In-Deeds
             </h4>
         );
     } else {
         return (
-            <div className='mb-4 flex justify-center' style={{ marginTop: '150px' }}>
+            <div className='mb-4 flex justify-center' style={{ marginTop: '7rem' }}>
                 <div className='px-4'>
                     <Container>
                         <h4 className='my-5 text-center'>My NFT In-Deeds on the market</h4>

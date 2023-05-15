@@ -21,6 +21,11 @@ export default function HomePage() {
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
 
+    useEffect(() => {
+        loadHouses();
+        walletListener();
+    }, []);
+
     async function loadHouses() {
         const provider = new ethers.providers.Web3Provider(ethereum);
         const houseNFTContract = new ethers.Contract(
@@ -87,11 +92,6 @@ export default function HomePage() {
         }
     }
 
-    useEffect(() => {
-        loadHouses();
-        walletListener();
-    }, []);
-
     function houseOwner(id) {
         const _house = houses.map(h => {
             if (Number(h.houseId) == id && h.seller.toLowerCase() == walletAddress) {
@@ -99,7 +99,6 @@ export default function HomePage() {
             }
         });
 
-        console.log('house', _house)
         return _house[0];
     }
 
@@ -163,7 +162,7 @@ export default function HomePage() {
 
     if (houses.length === 0) {
         return (
-            <h4 className='text-center' style={{ marginTop: '150px' }}>
+            <h4 className='text-center' style={{ marginTop: '7rem' }}>
                 Be the first to list an NFT-in-deed! &#127968;
             </h4>
         );

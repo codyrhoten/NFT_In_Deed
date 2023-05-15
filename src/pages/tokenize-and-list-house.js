@@ -191,44 +191,39 @@ export default function ListHome() {
     return (
         <>
             <TxModal show={show} handleClose={handleClose} tokenize={true} />
-            <Container className="flex justify-center" style={{ marginTop: '125px' }}>
-                <div className="flex flex-col pb-12">
+            <Row style={{ marginTop: '7rem' }}>
+                <div className="mb-5 mx-auto col-10 col-md-8 col-lg-6">
                     <h2 className="mt-4 text-center">List your house</h2>
-                    <p className="text-center"><i>3% listing fee</i></p>
+                    <p className="text-center mb-5"><i>3% listing fee</i></p>
                     <Form
-                        className="justify-content-md-center"
                         onSubmit={tokenizeAndListHouse}
                     >
-                        <Col>
-                            <Form.Control
-                                required
-                                type="string"
-                                placeholder="street, unit, city, state, postal code, country"
-                                className="border rounded p-2"
-                                value={formInput.address ? formInput.address : ""}
-                                onChange={(e) =>
-                                    updateFormInput({
-                                        ...formInput,
-                                        address: e.target.value,
-                                    })
-                                }
-                            />
-                        </Col>
-                        <Col sm={2} className="mt-4">
-                            <Form.Control
-                                required
-                                type="number"
-                                placeholder="price in ETH"
-                                className="border rounded"
-                                value={formInput.priceInEth ? formInput.priceInEth : ""}
-                                onChange={(e) =>
-                                    updateFormInput({
-                                        ...formInput,
-                                        priceInEth: e.target.value,
-                                    })
-                                }
-                            />
-                        </Col>
+                        <Form.Control
+                            required
+                            type="string"
+                            placeholder="street, unit, city, state, postal code, country"
+                            className="border rounded p-2"
+                            value={formInput.address ? formInput.address : ""}
+                            onChange={(e) =>
+                                updateFormInput({
+                                    ...formInput,
+                                    address: e.target.value,
+                                })
+                            }
+                        />
+                        <Form.Control
+                            required
+                            type="number"
+                            placeholder="price in ETH"
+                            className="border rounded mt-4"
+                            value={formInput.priceInEth ? formInput.priceInEth : ""}
+                            onChange={(e) =>
+                                updateFormInput({
+                                    ...formInput,
+                                    priceInEth: e.target.value,
+                                })
+                            }
+                        />
                         <Form.Control
                             required
                             type="file"
@@ -236,13 +231,17 @@ export default function ListHome() {
                             className="mt-4"
                             onChange={onChange}
                         />
-                        {fileUrl && (
-                            <div className="text-center">
-                                <img className="rounded mt-4" width="350" src={fileUrl} />
-                            </div>
-                        )}
-                        <Row className="mt-4" xs={2}>
-                            <Col sm={1}>
+                        {
+                            fileUrl ? (
+                                <div>
+                                    <img className="rounded mt-4" width="350" src={fileUrl} />
+                                </div>
+                            ) : (
+                                <div className="rounded border mt-4" style={{ height: '200px', width: '350px' }}></div>
+                            )
+                        }
+                        <Row className="mt-4 mx-auto">
+                            <Col sm={2} className="me-1">
                                 <Form.Group>
                                     <Form.Label>Bedrooms</Form.Label>
                                     <Form.Select
@@ -257,7 +256,7 @@ export default function ListHome() {
                                     </Form.Select>
                                 </Form.Group>
                             </Col>
-                            <Col sm={1}>
+                            <Col sm={2} className="ms-1">
                                 <Form.Group>
                                     <Form.Label>Bathrooms</Form.Label>
                                     <Form.Select
@@ -272,7 +271,7 @@ export default function ListHome() {
                                     </Form.Select>
                                 </Form.Group>
                             </Col>
-                            <Col sm={2}>
+                            <Col sm={3}>
                                 <Form.Group>
                                     <Form.Label>Interior Sq Ft</Form.Label>
                                     <Form.Control
@@ -289,7 +288,9 @@ export default function ListHome() {
                                     />
                                 </Form.Group>
                             </Col>
-                            <Col sm={2}>
+                        </Row>
+                        <Row className="mt-4 mx-auto">
+                            <Col sm={3}>
                                 <Form.Group>
                                     <Form.Label>Lot Sq Ft</Form.Label>
                                     <Form.Control
@@ -306,7 +307,7 @@ export default function ListHome() {
                                     />
                                 </Form.Group>
                             </Col>
-                            <Col sm={2}>
+                            <Col sm={3}>
                                 <Form.Group>
                                     <Form.Label>Year built</Form.Label>
                                     <Form.Control
@@ -324,7 +325,7 @@ export default function ListHome() {
                                 </Form.Group>
                             </Col>
                         </Row>
-                        <div className="text-center">
+                        <div className="text-center mt-4">
                             <Button
                                 type="submit"
                                 className="my-4 rounded px-5 py-2 shadow-lg"
@@ -334,7 +335,7 @@ export default function ListHome() {
                         </div>
                     </Form>
                 </div>
-            </Container>
+            </Row>
         </>
     );
 }

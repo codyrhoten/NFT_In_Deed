@@ -10,6 +10,7 @@ import { Button, Col, Container, Form, Row } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import { notify, update } from '../../utils/notification';
 import TxModal from '../components/TxModal';
+import StyledButton from '../components/StyledButton';
 
 const projectSecret = process.env.NEXT_PUBLIC_IPFS_KEY_SECRET;
 const projectId = process.env.NEXT_PUBLIC_IPFS_PROJECT_ID;
@@ -326,12 +327,7 @@ export default function ListHome() {
                             </Col>
                         </Row>
                         <div className="text-center mt-4">
-                            <Button
-                                type="submit"
-                                className="my-4 rounded px-5 py-2 shadow-lg"
-                            >
-                                Tokenize and list house
-                            </Button>
+                            <StyledButton type='submit' text='Tokenize and list house' />
                         </div>
                     </Form>
                 </div>

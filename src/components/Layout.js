@@ -59,14 +59,17 @@ export default function Layout({ children }) {
                                 {" "}To use this marketplace, MetaMask must be installed in your browser. Click the button to see which browsers are supported.{" "}
                             </p>
                             <div className="text-center">
-                                <Button
-                                    className='rounded mb-3 px-3 py-2 shadow-lg'
-                                    onClick={
-                                        () => window.open('https://metamask.io/download.html', '_blank')
-                                    }
-                                >
+                                <button
+                                    className='rounded my-3 px-4 py-3 shadow w-100'
+                                    onClick={() => window.open('https://metamask.io/download.html', '_blank')}
+                                    style={{
+                                        textDecoration: 'none',
+                                        color: 'white',
+                                        backgroundColor: '#1e1e1e',
+                                        border: '0px'
+                                    }}>
                                     Get MetaMask
-                                </Button>
+                                </button>
                             </div>
                         </Modal.Body>
                     </Modal>

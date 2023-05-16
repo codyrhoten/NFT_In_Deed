@@ -22,7 +22,11 @@ export default function TxModal({ show, index, houseResale, tokenize }) {
             <Modal.Body>
                 {/* STEP 1 */}
                 <p className='p-4 my-2'>
-                    <b>Step 1: </b>{
+                    <b>Step 1:</b> Make sure that if you've changed MetaMask accounts, the wallet address listed on the Connect button matches the one you intend on buying from! If that's not the case, you'll have to connect via the MetaMask extension.
+                </p>
+                {/* STEP 2 */}
+                <p className='p-4 my-2'>
+                    <b>Step 2: </b>{
                         (() => {
                             if (index) {
                                 return 'Purchase house NFT from the seller by confirming the transaction on your wallet.';
@@ -34,19 +38,19 @@ export default function TxModal({ show, index, houseResale, tokenize }) {
                         })()
                     }
                 </p>
-                {/* STEP 2 */}
+                {/* STEP 3 */}
                 <p className='p-4 my-2'>
-                    <b>Step 2:</b> Wait for a few seconds for the transaction to be processed.
+                    <b>Step 3:</b> Wait for a few seconds for the transaction to be processed.
                 </p>
-                {/* STEPS 3 - 4 */}
+                {/* STEPS 4 - 5 */}
                 {
                     houseResale || tokenize ? (
                         <>
                             <p className='p-4 my-2'>
-                                <b>Step 3:</b> Now for the listing transaction: this comes with a 3% listing fee. Confirm the transaction in your wallet.
+                                <b>Step 4:</b> Now for the listing transaction: this comes with a 3% listing fee. Confirm the transaction in your wallet.
                             </p>
                             <p className='p-4 my-2'>
-                                <b>Step 4:</b> Wait another few seconds for the transaction to be processed. Then your house will be on the NFT-in-Deed Market for sale!
+                                <b>Step 5:</b> Wait another few seconds for the transaction to be processed. Then your house will be on the NFT-in-Deed Market for sale!
                             </p>
                         </>
                     ) : null

@@ -12,6 +12,7 @@ import Loader from '../components/Loader';
 import { toast } from 'react-toastify';
 import { notify, update } from '../../utils/notification';
 import TxModal from '../components/TxModal';
+import StyledButton from '../components/StyledButton';
 
 export default function HomePage() {
     const [show, setShow] = useState(false);
@@ -190,15 +191,12 @@ export default function HomePage() {
                                         {`${h.bedrooms} bed, ${h.bathrooms} bath, ${h.houseSqFt} sq ft home, ${h.lotSqFt} sq ft lot, built ${h.yearBuilt}`}
                                     </p>
                                     <div className='text-center'>
-                                        <Button
+                                        <StyledButton 
                                             style={{ display: isConnected ? 'block' : 'none' }}
-                                            className='px-3 mx-auto mb-4'
-                                            onClick={() => {
-                                                buyHouse(h);
-                                            }}
-                                        >
-                                            Buy
-                                        </Button>
+                                            clickHandler={buyHouse}
+                                            text='Buy'
+                                            parameter={h}
+                                        />
                                     </div>
                                 </Col>
                             ))}

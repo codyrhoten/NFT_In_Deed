@@ -10,6 +10,7 @@ import { toast } from 'react-toastify';
 import { notify, update } from '../../utils/notification';
 import { Button, Container, Form, Modal } from 'react-bootstrap';
 import TxModal from '../components/TxModal';
+import StyledButton from '../components/StyledButton';
 
 export default function HouseResale() {
     const [show, setShow] = useState(false);
@@ -121,9 +122,7 @@ export default function HouseResale() {
                             </div>
                         )}
                         <div className='text-center'>
-                            <Button type='submit' className='my-4 rounded px-5 py-2 shadow-lg'>
-                                Resell house
-                            </Button>
+                            <StyledButton type='submit' text='Resell house' />
                         </div>
                     </Form>
                 </div>

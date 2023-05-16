@@ -28,10 +28,16 @@ export default function Header({ metamaskInstalled, walletButtonPressed, walletA
             </Navbar.Collapse>
             {
                 metamaskInstalled && (
-                    <Button
-                        id='walletButton'
+                    <button
+                        className='rounded px-4 py-2 me-5 w-15'
                         onClick={walletButtonPressed}
-                        className='me-5'
+                        style={{
+                            textDecoration: 'none',
+                            color: 'black',
+                            backgroundColor: 'white',
+                            border: '0px'
+                        }}
+                        id='walletButton'
                     >
                         {walletAddress ? (
                             'Connected: ' +
@@ -39,9 +45,9 @@ export default function Header({ metamaskInstalled, walletButtonPressed, walletA
                             '...' +
                             String(walletAddress).substring(38)
                         ) : (
-                            <span>Connect Wallet</span>
+                            'Connect Wallet'
                         )}
-                    </Button>
+                    </button>
                 )
             }
         </Navbar >

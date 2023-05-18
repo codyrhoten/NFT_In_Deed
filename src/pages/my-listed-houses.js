@@ -5,7 +5,8 @@ import { houseNftAddress, marketAddress } from '../../config';
 const Marketplace = require('../../artifacts/contracts/Market.sol/Market.json');
 const HouseNFT = require('../../artifacts/contracts/HouseNFT.sol/HouseNFT.json');
 import axios from 'axios';
-import { Col, Container, Row } from 'react-bootstrap';
+import { Container, Row } from 'react-bootstrap';
+import DataCard from '../components/Card/Card';
 
 export default function MyListedHouses() {
     const [houses, setHouses] = useState([]);
@@ -60,18 +61,14 @@ export default function MyListedHouses() {
                     <Container>
                         <h4 className='my-5 text-center'>My NFT In-Deeds on the market</h4>
                         <Row xs='1' lg='3' className='justify-content-md-center'>
-                            {houses.map((h, i) => (
-                                <Col key={i} className='shadow rounded overflow-hidden mx-2' lg={true}>
-                                    <p className='text-center mt-3'><b>{h.address}</b></p>
-                                    <div className='text-center'>
-                                        <img src={h.imageURL} className='rounded' height='125' />
-                                    </div>
-                                    <p className='text-center mt-2'>{h.price} ETH</p>
-                                    <p align='center'>
-                                        {`${h.bedrooms} bed, ${h.bathrooms} bath, ${h.houseSqFt} sq ft home, ${h.lotSqFt} sq ft lot, built ${h.yearBuilt}`}
-                                    </p>
-                                </Col>
-                            ))}
+                            {
+                                houses.map((h, i) => (
+                                    <DataCard
+                                        key={i}
+                                        houseData={h}
+                                    />
+                                ))
+                            }
                         </Row>
                     </Container>
                 </div>

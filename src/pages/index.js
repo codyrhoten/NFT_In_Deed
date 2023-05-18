@@ -7,11 +7,12 @@ import { houseNftAddress, marketAddress } from '../../config';
 const Marketplace = require('../../artifacts/contracts/Market.sol/Market.json');
 const HouseNFT = require('../../artifacts/contracts/HouseNFT.sol/HouseNFT.json');
 // front-end modules
-import { Button, Col, Container, Row } from 'react-bootstrap';
 import Loader from '../components/Loader';
 import { toast } from 'react-toastify';
 import { notify, update } from '../../utils/notification';
+import { Card, Container, Row } from 'react-bootstrap';
 import TxModal from '../components/TxModal';
+import DataCard from '../components/Card/Card';
 import StyledButton from '../components/StyledButton';
 
 export default function HomePage() {
@@ -174,32 +175,17 @@ export default function HomePage() {
                 <div className='mb-4 flex justify-center px-4' style={{ marginTop: '150px' }}>
                     <Container>
                         <Row xs='1' lg='3' className='justify-content-center'>
-                            {houses.map((h, i) => (
-                                <Col
-                                    key={i}
-                                    className='shadow rounded overflow-hidden m-3'
-                                    lg={true}
-                                >
-                                    <p className='text-center mt-3'>
-                                        <b>{h.address}</b>
-                                    </p>
-                                    <div className='text-center'>
-                                        <img src={h.imageURL} className='rounded' height='125' />
-                                    </div>
-                                    <p className='text-center mt-2'>{h.price} ETH</p>
-                                    <p align='center'>
-                                        {`${h.bedrooms} bed, ${h.bathrooms} bath, ${h.houseSqFt} sq ft home, ${h.lotSqFt} sq ft lot, built ${h.yearBuilt}`}
-                                    </p>
-                                    <div className='text-center'>
-                                        <StyledButton 
-                                            style={{ display: isConnected ? 'block' : 'none' }}
-                                            clickHandler={buyHouse}
-                                            text='Buy'
-                                            parameter={h}
-                                        />
-                                    </div>
-                                </Col>
-                            ))}
+                            {
+                                houses.map((h, i) => (
+                                    <DataCard
+                                        key={i}
+                                        houseData={h}
+                                        isConnected={isConnected}
+                                        clickHandler={buyHouse}
+                                        page='index'
+                                    />
+                                ))
+                            }
                         </Row>
                     </Container>
                 </div>

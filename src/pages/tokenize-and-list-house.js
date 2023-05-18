@@ -235,10 +235,15 @@ export default function ListHome() {
                         {
                             fileUrl ? (
                                 <div>
-                                    <img className="rounded mt-4" width="350" src={fileUrl} />
+                                    <img
+                                        className="rounded mt-4"
+                                        width="350"
+                                        src={fileUrl}
+                                        style={{ aspectRatio: '16 / 9', objectFit: 'cover' }}
+                                    />
                                 </div>
                             ) : (
-                                <div className="rounded border mt-4" style={{ height: '200px', width: '350px' }}></div>
+                                <div className="rounded border mt-4" style={{ aspectRatio: '16 / 9', width: '350px' }}></div>
                             )
                         }
                         <Row className="mt-4 mx-auto">

@@ -8,7 +8,8 @@ const Marketplace = require('../../artifacts/contracts/Market.sol/Market.json');
 const HouseNFT = require('../../artifacts/contracts/HouseNFT.sol/HouseNFT.json');
 import axios from 'axios';
 import { notify } from '../../utils/notification';
-import { Button, Col, Container, Row } from 'react-bootstrap';
+import { Card, Container, Row } from 'react-bootstrap';
+import DataCard from '../components/Card/Card';
 import Loader from '../components/Loader';
 
 export default function MyHouses() {
@@ -16,8 +17,8 @@ export default function MyHouses() {
     const [houses, setHouses] = useState([]);
     // const [loadingState, setLoadingState] = useState('not-loaded');
     const router = useRouter();
-    events.on('routeChangeStart', (url) => setLoading(true) );
-    events.on('routeChangeComplete', (url) => setLoading(false) );
+    events.on('routeChangeStart', (url) => setLoading(true));
+    events.on('routeChangeComplete', (url) => setLoading(false));
 
     async function loadHouses() {
         const web3Modal = new Web3Modal();
@@ -67,7 +68,7 @@ export default function MyHouses() {
         router.push(`house-resale?id=${house.houseId}&houseURI=${house.houseURI}`);
     }
 
-    useEffect( () => { loadHouses() }, [] );
+    useEffect(() => { loadHouses() }, []);
 
     if (houses.length === 0) {
         return (
@@ -80,28 +81,18 @@ export default function MyHouses() {
             <div className='mb-4 flex justify-center' style={{ marginTop: '7rem' }}>
                 <div className='px-4'>
                     <Container>
-                        <h4 className='my-4 text-center'>My NFTs-in-Deed</h4>
+                        <h4 className='my-4 text-center'>My NFTs In-deed</h4>
                         <Row xs='1' lg='3' className='justify-content-md-center'>
-                            {houses.map((h, i) => (
-                                <Col key={i} className='shadow rounded overflow-hidden mx-2' lg={true}>
-                                    <p className='text-center mt-3'><b>{h.address}</b></p>
-                                    <div className='text-center'>
-                                        <img src={h.imageURL} className='rounded' height='125' />
-                                    </div>
-                                    <p className='text-center mt-2'>{h.price} ETH</p>
-                                    <p align='center'>
-                                        {`${h.bedrooms} bed, ${h.bathrooms} bath, ${h.houseSqFt} sq ft home, ${h.lotSqFt} sq ft lot, built ${h.yearBuilt}`}
-                                    </p>
-                                    <div className='text-center'>
-                                        <Button
-                                            className='px-3 mx-auto mb-4'
-                                            onClick={() => { listHouse(h) }}
-                                        >
-                                            List
-                                        </Button>
-                                    </div>
-                                </Col>
-                            ))}
+                            {
+                                houses.map((h, i) => (
+                                    <DataCard
+                                        key={i}
+                                        houseData={h}
+                                        clickHandler={listHouse}
+                                        page='purchased'
+                                    />
+                                ))
+                            }
                         </Row>
                     </Container>
                 </div>

@@ -1,0 +1,9 @@
+.card:hover {
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4) !important;
+    transition: box-shadow 0.3s ease-in-out;
+}
+
+.cardImg {
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+}

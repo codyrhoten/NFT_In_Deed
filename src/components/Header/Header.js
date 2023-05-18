@@ -1,7 +1,6 @@
 import { Navbar, Nav } from 'react-bootstrap'
 import Link from 'next/link';
 import styles from './Header.module.css';
-import { Button } from 'react-bootstrap';
 
 export default function Header({ metamaskInstalled, walletButtonPressed, walletAddress }) {
     return (

@@ -15,16 +15,18 @@ export default function Layout({ children }) {
     const [show, setShow] = useState(true);
     const handleClose = () => setShow(false);
 
-    useEffect(() => {
-        getWallet();
-    },
-        [metamaskInstalled, network]);
+    useEffect(
+        async () => {
+            const chain = await getChain();
+            setNetwork(chain);
+            getWallet();
+        },
+        []
+    );
 
     async function walletListener() {
         if (window.ethereum) {
             setMetamaskInstalled(true);
-            const chain = await getChain();
-            setNetwork(chain);
             console.log(network);
 
             if (network !== 'Goerli') {

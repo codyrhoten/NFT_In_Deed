@@ -8,7 +8,7 @@ const Marketplace = require('../../artifacts/contracts/Market.sol/Market.json');
 const HouseNFT = require('../../artifacts/contracts/HouseNFT.sol/HouseNFT.json');
 import axios from 'axios';
 import { notify } from '../../utils/notification';
-import { Card, Container, Row } from 'react-bootstrap';
+import { Container, Row } from 'react-bootstrap';
 import DataCard from '../components/Card/Card';
 import Loader from '../components/Loader';
 

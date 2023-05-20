@@ -1,10 +1,11 @@
 import { useState, useEffect, cloneElement } from "react";
+import { chains } from "../../utils/chains.js";
 import { ToastContainer } from 'react-toastify';
 import { notify } from '../../utils/notification';
 import getWalletConnected from "../../utils/wallet";
 import Header from "./Header/Header";
 import WalletStatus from "./WalletStatus";
-import { Button, Container, Modal } from "react-bootstrap";
+import { Container, Modal } from "react-bootstrap";
 
 export default function Layout({ children }) {
     const [walletAddress, setWallet] = useState('');
@@ -24,6 +25,7 @@ export default function Layout({ children }) {
             setMetamaskInstalled(true);
             const chain = await getChain();
             setNetwork(chain);
+            console.log(network);
 
             if (network !== 'Goerli') {
                 setStatus(

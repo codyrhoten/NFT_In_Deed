@@ -10,10 +10,9 @@ const HouseNFT = require('../../artifacts/contracts/HouseNFT.sol/HouseNFT.json')
 import Loader from '../components/Loader';
 import { toast } from 'react-toastify';
 import { notify, update } from '../../utils/notification';
-import { Card, Container, Row } from 'react-bootstrap';
+import { Container, Row } from 'react-bootstrap';
 import TxModal from '../components/TxModal';
 import DataCard from '../components/Card/Card';
-import StyledButton from '../components/StyledButton';
 
 export default function HomePage() {
     const [show, setShow] = useState(false);
@@ -24,8 +23,8 @@ export default function HomePage() {
     const handleShow = () => setShow(true);
 
     useEffect(() => {
-        loadHouses();
         walletListener();
+        loadHouses();
     }, []);
 
     async function loadHouses() {

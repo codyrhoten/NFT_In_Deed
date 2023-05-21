@@ -84,9 +84,9 @@ export default function Layout({ children }) {
 
     async function getChain() {
         if (window.ethereum) {
-            let chain = await ethereum.networkVersion;
+            let chain = await ethereum.request({ method: 'eth_chainId' });
 
-            if (chain === '5') {
+            if (chain === '0x5') {
                 chain = 'Goerli';
             }
 

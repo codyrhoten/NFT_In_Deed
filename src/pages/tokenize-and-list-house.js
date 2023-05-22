@@ -6,7 +6,7 @@ import { ethers } from 'ethers';
 const Marketplace = require('../../artifacts/contracts/Market.sol/Market.json');
 const HouseNFT = require('../../artifacts/contracts/HouseNFT.sol/HouseNFT.json');
 import { houseNftAddress, marketAddress } from '../../config';
-import { Button, Col, Container, Form, Row } from 'react-bootstrap';
+import { Col, Form, Row } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import { notify, update } from '../../utils/notification';
 import TxModal from '../components/TxModal';
@@ -192,7 +192,7 @@ export default function ListHome() {
     return (
         <>
             <TxModal show={show} handleClose={handleClose} tokenize={true} />
-            <Row style={{ marginTop: '7rem' }}>
+            <Row style={{ marginTop: '6rem' }}>
                 <div className="mb-5 mx-auto col-10 col-md-8 col-lg-6">
                     <h2 className="mt-4 text-center">List your house</h2>
                     <p className="text-center mb-5"><i>3% listing fee</i></p>
@@ -332,7 +332,11 @@ export default function ListHome() {
                             </Col>
                         </Row>
                         <div className="text-center mt-4">
-                            <StyledButton type='submit' text='Tokenize and list house' />
+                            <StyledButton
+                                type='submit'
+                                text='Tokenize and list house'
+                                page="form"
+                            />
                         </div>
                     </Form>
                 </div>

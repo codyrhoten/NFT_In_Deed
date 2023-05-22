@@ -8,7 +8,7 @@ const Marketplace = require('../../artifacts/contracts/Market.sol/Market.json');
 import { houseNftAddress, marketAddress } from '../../config';
 import { toast } from 'react-toastify';
 import { notify, update } from '../../utils/notification';
-import { Button, Container, Form, Modal } from 'react-bootstrap';
+import { Container, Form } from 'react-bootstrap';
 import TxModal from '../components/TxModal';
 import StyledButton from '../components/StyledButton';
 
@@ -122,7 +122,11 @@ export default function HouseResale() {
                             </div>
                         )}
                         <div className='text-center'>
-                            <StyledButton type='submit' text='Resell house' />
+                            <StyledButton
+                                type='submit'
+                                text='Resell house'
+                                page="form"
+                            />
                         </div>
                     </Form>
                 </div>

@@ -3,7 +3,7 @@ export default function StyledButton({ text, clickHandler, parameter, isConnecte
 
     if (isConnected && page === 'index') {
         display = 'block';
-    } else if (page === 'purchased') {
+    } else if (page === 'purchased' || 'form') {
         display = 'block';
     }
 

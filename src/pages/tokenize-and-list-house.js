@@ -192,13 +192,11 @@ export default function ListHome() {
     return (
         <>
             <TxModal show={show} handleClose={handleClose} tokenize={true} />
-            <Row style={{ marginTop: '6rem' }}>
+            <Row style={{ marginTop: '7rem' }}>
                 <div className="mb-5 mx-auto col-10 col-md-8 col-lg-6">
-                    <h2 className="mt-4 text-center">List your house</h2>
+                    <h2 className="text-center">List your house</h2>
                     <p className="text-center mb-5"><i>3% listing fee</i></p>
-                    <Form
-                        onSubmit={tokenizeAndListHouse}
-                    >
+                    <Form onSubmit={tokenizeAndListHouse}>
                         <Form.Control
                             required
                             type="string"
@@ -215,7 +213,7 @@ export default function ListHome() {
                         <Form.Control
                             required
                             type="number"
-                            placeholder="price in ETH"
+                            placeholder="price in Goerli ETH"
                             className="border rounded mt-4"
                             value={formInput.priceInEth ? formInput.priceInEth : ""}
                             onChange={(e) =>

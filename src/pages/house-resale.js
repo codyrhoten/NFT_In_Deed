@@ -95,42 +95,38 @@ export default function HouseResale() {
     return (
         <>
             <TxModal show={show} handleClose={handleClose} houseResale={true} />
-            <Container className='flex justify-center' style={{ marginTop: '7rem' }}>
-                <div className='w-1/2 flex flex-col pb-12'>
-                    <h2 className='text-2xl mt-4 text-center bg-gray-100 rounded'>
-                        List your house
-                    </h2>
-                    <Form className='justify-content-md-center' onSubmit={listHouse}>
-                        <Form.Control
-                            require
-                            type='number'
-                            placeholder='price in ETH'
-                            className='border rounded mx-auto'
-                            value={formInput.priceInEth ? formInput.priceInEth : ''}
-                            onChange={e => updateFormInput({
-                                ...formInput,
-                                priceInEth: e.target.value
-                            })}
-                        />
-                        {image && (
-                            <div className='mt-4 text-center'>
-                                <img
-                                    className='rounded mx-auto'
-                                    width='400'
-                                    src={image}
-                                />
-                            </div>
-                        )}
-                        <div className='text-center'>
-                            <StyledButton
-                                type='submit'
-                                text='Resell house'
-                                page="form"
+            <div className='mx-auto col-10 col-md-8 col-lg-6' style={{ marginTop: '7rem' }}>
+                <h2 className='text-center'>List your house</h2>
+                <Form onSubmit={listHouse}>
+                    <Form.Control
+                        require
+                        type='number'
+                        placeholder='price in Goerli ETH'
+                        className='border rounded mt-5'
+                        value={formInput.priceInEth ? formInput.priceInEth : ''}
+                        onChange={e => updateFormInput({
+                            ...formInput,
+                            priceInEth: e.target.value
+                        })}
+                    />
+                    {image && (
+                        <div className='mt-5 text-center'>
+                            <img
+                                className='rounded mx-auto'
+                                width='400'
+                                src={image}
                             />
                         </div>
-                    </Form>
-                </div>
-            </Container>
+                    )}
+                    <div className='mt-5 text-center'>
+                        <StyledButton
+                            type='submit'
+                            text='Resell house'
+                            page="form"
+                        />
+                    </div>
+                </Form>
+            </div>
         </>
     );
 }

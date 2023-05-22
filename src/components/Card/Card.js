@@ -17,7 +17,7 @@ export default function DataCard({ houseData, isConnected, clickHandler, page })
                 <Card.Title className='mt-2 text-center h-100'>
                     {houseData.address}
                 </Card.Title>
-                <p className='text-center mt-3'>{houseData.price} ETH</p>
+                <p className='text-center mt-3'>{houseData.price} Goerli ETH</p>
                 <p className='mt-3'>
                     {`${houseData.bedrooms} bed, ${houseData.bathrooms} bath, ${houseData.houseSqFt} sq ft home, ${houseData.lotSqFt} sq ft lot, built ${houseData.yearBuilt}`}
                 </p>

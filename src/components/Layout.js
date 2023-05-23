@@ -16,10 +16,14 @@ export default function Layout({ children }) {
     const handleClose = () => setShow(false);
 
     useEffect(
-        async () => {
-            const chain = await getChain();
-            setNetwork(chain);
-            getWallet();
+        () => {
+            async function listeners() {
+                const chain = await getChain();
+                setNetwork(chain);
+                getWallet();
+            }
+
+            listeners();
         },
         []
     );

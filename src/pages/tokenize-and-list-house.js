@@ -45,12 +45,14 @@ export default function ListHome() {
     async function onChange(e) {
         // upload image to IPFS
         const file = e.target.files[0];
+        console.log(file);
 
         try {
             const added = await client.add(file, {
                 progress: (prog) => console.log(`received: ${prog}`),
             });
 
+            console.log('added path', added.path);
             const url = `https://ipfs.io/ipfs/${added.path}`;
             setFileUrl(url);
         } catch (err) {
@@ -80,7 +82,8 @@ export default function ListHome() {
             // return the URL to use it in the transaction
             return url;
         } catch (error) {
-            toast.error("Error uploading file. Try again");
+            toast.error("Error uploading metadata. Try again");
+            console.log(error);
             setFileUrl(null);
         }
     }

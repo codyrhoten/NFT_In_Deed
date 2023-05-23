@@ -98,3 +98,10 @@ code: "ERR_NETWORK"
 #### Solution:
 Canopy content blocker was blocking Mozilla's ability to make an Axios request to IPFS to retrieve
 the house metadata.
+
+### Issue \#14 5/22/23:
+Data doesn't upload to IPFS.
+#### Error: 
+HTTPError: not allowed - invalid origin - Forbidden 403
+#### Solution:
+Whitelist my localhost port (currently running) and website origin on Infura IPFS project

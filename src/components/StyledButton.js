@@ -10,7 +10,7 @@ export default function StyledButton({ text, clickHandler, parameter, isConnecte
     return (
         <button
             className='rounded my-3 px-4 py-2 shadow w-100'
-            onClick={() => clickHandler(parameter)}
+            onClick={clickHandler ? () => clickHandler(parameter) : undefined}
             style={{
                 textDecoration: 'none',
                 color: 'white',

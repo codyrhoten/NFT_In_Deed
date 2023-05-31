@@ -40,7 +40,7 @@
     },
     "scripts": {
         "dev": "next dev",
-        "build": "next build src",
+        "build": "next build",
         "start": "next start",
         "lint": "next lint"
     },

@@ -1,6 +1,6 @@
 # NFT-in-Deed Market - DApp
 
-<a href="https://nftindeed.codyrhoten.com//">View NFT-in-Deed market here</a>
+<a href="https://nftindeed.codyrhoten.com/">View NFT-in-Deed market here</a>
 
 <img src="/src/public/home-pg.png" alt="home page">
 

@@ -3,13 +3,13 @@ import axios from 'axios';
 // contract interaction modules
 import Web3Modal from 'web3modal';
 import { ethers } from 'ethers';
-import { houseNftAddress, marketAddress } from '../../config';
-const Marketplace = require('../../artifacts/contracts/Market.sol/Market.json');
-const HouseNFT = require('../../artifacts/contracts/HouseNFT.sol/HouseNFT.json');
+import { houseNftAddress, marketAddress } from '../config';
+const Marketplace = require('../artifacts/contracts/Market.sol/Market.json');
+const HouseNFT = require('../artifacts/contracts/HouseNFT.sol/HouseNFT.json');
 // front-end modules
 import Loader from '../components/Loader';
 import { toast } from 'react-toastify';
-import { notify, update } from '../../utils/notification';
+import { notify, update } from '../utils/notification';
 import { Container, Row } from 'react-bootstrap';
 import TxModal from '../components/TxModal';
 import DataCard from '../components/Card/Card';

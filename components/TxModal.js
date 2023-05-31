@@ -1,4 +1,3 @@
-// import Image from 'next/image';
 import { Modal } from "react-bootstrap";
 
 export default function TxModal({ show, index, houseResale, tokenize }) {

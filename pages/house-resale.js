@@ -3,12 +3,12 @@ import { useRouter } from 'next/router';
 import axios from 'axios';
 import Web3Modal from 'web3modal';
 import { ethers } from 'ethers';
-const HouseNFT = require('../../artifacts/contracts/HouseNFT.sol/HouseNFT.json');
-const Marketplace = require('../../artifacts/contracts/Market.sol/Market.json');
-import { houseNftAddress, marketAddress } from '../../config';
+const HouseNFT = require('../artifacts/contracts/HouseNFT.sol/HouseNFT.json');
+const Marketplace = require('../artifacts/contracts/Market.sol/Market.json');
+import { houseNftAddress, marketAddress } from '../config';
 import { toast } from 'react-toastify';
-import { notify, update } from '../../utils/notification';
-import { Container, Form } from 'react-bootstrap';
+import { notify, update } from '../utils/notification';
+import { Form } from 'react-bootstrap';
 import TxModal from '../components/TxModal';
 import StyledButton from '../components/StyledButton';
 

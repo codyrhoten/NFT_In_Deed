@@ -1,10 +1,9 @@
 import { useState, useEffect, cloneElement } from "react";
-import { chains } from "../../utils/chains.js";
 import { ToastContainer } from 'react-toastify';
-import { notify } from '../../utils/notification';
-import getWalletConnected from "../../utils/wallet";
-import Header from "./Header/Header";
-import WalletStatus from "./WalletStatus";
+import { notify } from '../utils/notification.js';
+import getWalletConnected from "../utils/wallet.js";
+import Header from "./Header/Header.js";
+import WalletStatus from "./WalletStatus.js";
 import { Container, Modal } from "react-bootstrap";
 
 export default function Layout({ children }) {

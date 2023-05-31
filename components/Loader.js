@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import loadingSpinner from '../../public/loading-spinner.gif';
+import loadingSpinner from '../public/loading-spinner.gif';
 
 export default function Loader({ width, height }) {
     return (

@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 import Web3Modal from 'web3modal';
 import { ethers } from 'ethers';
-import { houseNftAddress, marketAddress } from '../../config';
-const Marketplace = require('../../artifacts/contracts/Market.sol/Market.json');
-const HouseNFT = require('../../artifacts/contracts/HouseNFT.sol/HouseNFT.json');
+import { houseNftAddress, marketAddress } from '../config';
+const Marketplace = require('../artifacts/contracts/Market.sol/Market.json');
+const HouseNFT = require('../artifacts/contracts/HouseNFT.sol/HouseNFT.json');
 import axios from 'axios';
 import { Container, Row } from 'react-bootstrap';
 import DataCard from '../components/Card/Card';

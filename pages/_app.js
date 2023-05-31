@@ -1,5 +1,5 @@
 import Head from 'next/head';
-import Layout from '../components/Layout.js';
+import Layout from '../components/Layout';
 import Loader from '../components/Loader.js';
 import { events } from 'next/router';
 import 'bootstrap/dist/css/bootstrap.min.css';

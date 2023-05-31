@@ -8,7 +8,7 @@ const HouseNFT = require('../artifacts/contracts/HouseNFT.sol/HouseNFT.json');
 import { houseNftAddress, marketAddress } from '../config';
 import { Col, Form, Row } from 'react-bootstrap';
 import { toast } from 'react-toastify';
-import { notify, update } from '../../utils/notification';
+import { notify, update } from '../utils/notification';
 import TxModal from '../components/TxModal';
 import StyledButton from '../components/StyledButton';
 

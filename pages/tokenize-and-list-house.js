@@ -10,7 +10,7 @@ import { Col, Form, Row } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import { notify, update } from '../utils/notification';
 import TxModal from '../components/TxModal';
-import StyledButton from '../components/StyledButton';
+import StyledButton from '../components/StyledButton/StyledButton';
 
 const projectSecret = process.env.NEXT_PUBLIC_IPFS_KEY_SECRET;
 const projectId = process.env.NEXT_PUBLIC_IPFS_PROJECT_ID;

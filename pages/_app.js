@@ -8,6 +8,7 @@ import { useState } from 'react';
 
 export default function Dapp({ Component, pageProps }) {
     const [loading, setLoading] = useState(false);
+    const [chainless, setChainless] = useState(false);
     events.on('routeChangeStart', (url) => setLoading(true));
     events.on('routeChangeComplete', (url) => setLoading(false));
 
@@ -19,7 +20,7 @@ export default function Dapp({ Component, pageProps }) {
                 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
                 <link href="https://fonts.googleapis.com/css2?family=Abel&display=swap" rel="stylesheet" />
             </Head>
-            <Layout>
+            <Layout chainless={chainless} setChainless={setChainless}>
                 {
                     loading ?
                         <Loader width={520} height={400} /> :

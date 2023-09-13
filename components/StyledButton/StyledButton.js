@@ -1,3 +1,5 @@
+import styles from './StyledButton.module.css';
+
 export default function StyledButton({ text, clickHandler, parameter, isConnected, page }) {
     let display = 'none';
 
@@ -9,15 +11,10 @@ export default function StyledButton({ text, clickHandler, parameter, isConnecte
 
     return (
         <button
-            className='rounded my-3 px-4 py-2 shadow w-100'
+            className={`rounded my-3 px-4 py-2 shadow w-100 ${styles.styledButton}`}
             onClick={clickHandler ? () => clickHandler(parameter) : undefined}
-            style={{
-                textDecoration: 'none',
-                color: 'white',
-                backgroundColor: '#1e1e1e',
-                border: '0px',
-                display,
-            }}>
+            styles={{ display }}
+        >
             {text}
         </button>
     );

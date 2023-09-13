@@ -1,7 +1,6 @@
 import { Card } from 'react-bootstrap';
-import StyledButton from '../StyledButton';
+import StyledButton from '../StyledButton/StyledButton';
 import styles from './Card.module.css';
-import { useEffect, useState } from 'react';
 
 export default function DataCard({ houseData, isConnected, clickHandler, page }) {
     return (

@@ -164,7 +164,7 @@ export default function HomePage() {
     if (houses.length === 0) {
         return (
             <h4 className='text-center' style={{ marginTop: '7rem' }}>
-                Be the first to list an NFT-in-deed! &#127968;
+                Be the first to list an NFT In-deed! &#127968;
             </h4>
         );
     } else {

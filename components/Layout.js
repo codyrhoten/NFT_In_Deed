@@ -6,7 +6,7 @@ import Header from "./Header/Header.js";
 import WalletStatus from "./WalletStatus.js";
 import { Container, Modal } from "react-bootstrap";
 
-export default function Layout({ children }) {
+export default function Layout({ children, chainless, setChainless }) {
     const [walletAddress, setWallet] = useState('');
     const [network, setNetwork] = useState('');
     const [status, setStatus] = useState('');
@@ -63,7 +63,7 @@ export default function Layout({ children }) {
                     <Modal show={show} centered>
                         <Modal.Body>
                             <p className='p-3'>
-                                {" "}To use this marketplace, MetaMask must be installed in your browser. Click the button to see which browsers are supported.{" "}
+                                {" "}To use this marketplace, MetaMask must be installed in your browser. Get MetaMask to see which browsers are supported.{" "}
                             </p>
                             <div className="text-center">
                                 <button
@@ -74,8 +74,22 @@ export default function Layout({ children }) {
                                         color: 'white',
                                         backgroundColor: '#1e1e1e',
                                         border: '0px'
-                                    }}>
+                                    }}
+                                >
                                     Get MetaMask
+                                </button>
+                                Or
+                                <button
+                                    className='rounded my-3 px-4 py-3 shadow w-100'
+                                    onClick={() => setChainless(true)}
+                                    style={{
+                                        textDecoration: 'none',
+                                        color: 'white',
+                                        backgroundColor: '#1e1e1e',
+                                        border: '0px'
+                                    }}
+                                >
+                                    Access Without Blockchain
                                 </button>
                             </div>
                         </Modal.Body>
@@ -117,6 +131,8 @@ export default function Layout({ children }) {
                 getWalletConnected={getWalletConnected}
                 walletAddress={walletAddress}
                 walletButtonPressed={walletButtonPressed}
+                chainless={chainless}
+                setChainless={setChainless}
             />
             {!metamaskInstalled || network !== 'Goerli' ? <WalletStatus status={status} /> : children}
             <ToastContainer />

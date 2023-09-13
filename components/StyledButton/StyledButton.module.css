@@ -1,0 +1,11 @@
+.styledButton {
+    text-decoration: none;
+    color: white;
+    background-color: #1e1e1e;
+    border: 0px;
+    transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out;
+}
+
+.styledButton:hover {
+    color: gray;
+}

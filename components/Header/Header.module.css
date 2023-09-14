@@ -27,3 +27,10 @@
 .navBrand:hover {
     color: gray;
 }
+
+.disabledLink {
+    color: gray;
+    font-family: 'Abel', sans-serif;
+    font-size: 1.2em;
+    padding: 2rem 1rem 0rem;
+}

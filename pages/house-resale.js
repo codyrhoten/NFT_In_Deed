@@ -10,7 +10,7 @@ import { toast } from 'react-toastify';
 import { notify, update } from '../utils/notification';
 import { Form } from 'react-bootstrap';
 import TxModal from '../components/TxModal';
-import StyledButton from '../components/StyledButton';
+import StyledButton from '../components/StyledButton/StyledButton';
 
 export default function HouseResale() {
     const [show, setShow] = useState(false);
